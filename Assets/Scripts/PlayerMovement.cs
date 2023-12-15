@@ -10,6 +10,7 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody2D rb;
      public float SpeedX;
     public float SpeedY;
+    public float GravityIncreased;
     bool isGrounded;
     // Start is called before the first frame update
     void Start()
@@ -18,6 +19,7 @@ public class PlayerMovement : MonoBehaviour
         JumpForce = 5f;
         SpeedX = 10f;
         SpeedY = 5f;
+        GravityIncreased = 2f;
     }
 
     // Update is called once per frame
@@ -28,9 +30,12 @@ public class PlayerMovement : MonoBehaviour
         MoveY = Input.GetAxis("Vertical");
         
 
-        if(Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        if(Input.GetKeyDown(KeyCode.W) && isGrounded)
         {
         rb.velocity = new Vector2(MoveX * SpeedX * JumpForce, rb.velocity.x);
+        }
+        while (Input.GetKeyDown(KeyCode.S))
+        {
         }
     }
     void FixedUpdate()
@@ -40,5 +45,15 @@ public class PlayerMovement : MonoBehaviour
          {
             isGrounded = true;
          }
+         
+    }
+    
+    void OnTriggerEnter(Collider other) 
+    {
+        if (other.gameObject.CompareTag ("Pick Up"))
+        {
+            other.gameObject.SetActive (false);
+        }
     }
 }
+
