@@ -33,11 +33,11 @@ public class PlayerMovement : MonoBehaviour
         else isGrounded = false;
     }
 
-    private void OnTriggerEnter(Collider other)
+    void OnCollisionEnter2D(Collision2D collision)
     {
-        if (other.gameObject.CompareTag("PickUp"))
+        if (collision.gameObject.CompareTag("PickUp"))
         {
-            other.gameObject.SetActive(false);
+            collision.gameObject.SetActive(false);
         }
     }
 }
