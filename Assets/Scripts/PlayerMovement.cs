@@ -26,7 +26,14 @@ public class PlayerMovement : MonoBehaviour
         MoveX = Input.GetAxis("Horizontal") * moveSpeed;
         MoveY = Input.GetAxis("Vertical");
 
-        if (Input.GetKeyDown(KeyCode.W) && isGrounded) rb.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
+        if (Input.GetKeyDown(KeyCode.W) && (isGrounded || PickUpList.Count >= 1))
+        {
+            rb.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
+            if (!isGrounded)
+            {
+                RemoveBall();
+            }
+        }
         if (Input.GetKey(KeyCode.S) && isGrounded) rb.AddForce(new Vector2(0f, MoveY), ForceMode2D.Impulse);
 
         rb.velocity = new Vector2(MoveX, rb.velocity.y);
@@ -34,13 +41,25 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, distance: 1.2f);
+        RaycastHit2D hit = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y-(1*PickUpList.Count)), Vector2.down, 1.2f);
+        if (hit.collider != null)
+        {
+            if (hit.collider.CompareTag("Ground"))
+            {
+                isGrounded = true;
+            }
+            else
+            {
+                isGrounded = false;
+            }
+        }
+        else
+        {
+            isGrounded = false;
+        }
 
-        if (hit.collider != null) isGrounded = true;
-        else isGrounded = false;
 
-
-        if(Test == true)
+        if (Test == true)
         {
             RemoveBall();
             Test = false;
