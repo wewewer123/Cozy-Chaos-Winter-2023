@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -6,6 +8,8 @@ public class PlayerMovement : MonoBehaviour
     private float MoveY;
     [SerializeField] private float jumpForce = 7f;
     [SerializeField] private float moveSpeed = 7f;
+    [SerializeField] private GameObject PickUp;
+    [SerializeField] private List<GameObject> PickUpList;
     private Rigidbody2D rb;
 
     bool isGrounded;
@@ -14,7 +18,6 @@ public class PlayerMovement : MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        gameObject.transform.GetChild(0).gameObject.SetActive(false);
     }
     private void Update()
     {
@@ -41,8 +44,8 @@ public class PlayerMovement : MonoBehaviour
         if (collision.gameObject.CompareTag("PickUp"))
         {
             collision.gameObject.SetActive(false);
-            gameObject.transform.GetChild(0).gameObject.SetActive(true);
-            gameObject.transform.GetChild(0).gameObject.transform.position = new Vector2(gameObject.transform.position.x, gameObject.transform.position.y-gameObject.transform.localScale.y);
+            PickUpList.Add(Instantiate(PickUp, new Vector2(gameObject.transform.position.x, gameObject.transform.position.y - gameObject.transform.localScale.y * (PickUpList.Count + 1)), Quaternion.identity, gameObject.transform));
+            PickUpList[PickUpList.Count-1].tag = "PickedUp";
             gameObject.transform.position = new Vector2(gameObject.transform.position.x, gameObject.transform.position.y + gameObject.transform.localScale.y);
             gameObject.GetComponent<CircleCollider2D>().offset = new Vector2(gameObject.GetComponent<CircleCollider2D>().offset.x, gameObject.GetComponent<CircleCollider2D>().offset.y - gameObject.transform.localScale.y);
             //gameObject.GetComponent<CircleCollider2D>().radius += gameObject.transform.localScale.y / 2;
