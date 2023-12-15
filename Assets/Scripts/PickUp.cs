@@ -15,12 +15,13 @@ public class PickUp : MonoBehaviour
     void Update()
     {
     }
-    
-    void OnTriggerEnter(Collider other) 
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (other.gameObject.CompareTag ("PickUp"))
         {
-            other.gameObject.SetActive (false);
+            if (collision.gameObject.CompareTag("PickUp")) //why do we do it like this? this would make snowballs deactivate eachother even without player present.
+            {
+                collision.gameObject.SetActive(false);
+            }
         }
     }
 }
