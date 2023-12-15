@@ -9,8 +9,10 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float jumpForce = 7f;
     [SerializeField] private float moveSpeed = 7f;
     [SerializeField] private GameObject PickUp;
+    [SerializeField] private GameObject PickedUp;
     [SerializeField] private List<GameObject> PickUpList;
     private Rigidbody2D rb;
+    public bool Test;
 
     bool isGrounded;
 
@@ -37,18 +39,35 @@ public class PlayerMovement : MonoBehaviour
         if (hit.collider != null) isGrounded = true;
         else isGrounded = false;
 
+
+        if(Test == true)
+        {
+            RemoveBall();
+            Test = false;
+        }
     }
 
     void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("PickUp"))
         {
-            collision.gameObject.SetActive(false);
-            PickUpList.Add(Instantiate(PickUp, new Vector2(gameObject.transform.position.x, gameObject.transform.position.y - gameObject.transform.localScale.y * (PickUpList.Count + 1)), Quaternion.identity, gameObject.transform));
+            Destroy(collision.gameObject);
+            PickUpList.Add(Instantiate(PickedUp, new Vector2(gameObject.transform.position.x, gameObject.transform.position.y - gameObject.transform.localScale.y * (PickUpList.Count + 1)), Quaternion.identity, gameObject.transform));
             PickUpList[PickUpList.Count-1].tag = "PickedUp";
             gameObject.transform.position = new Vector2(gameObject.transform.position.x, gameObject.transform.position.y + gameObject.transform.localScale.y);
             gameObject.GetComponent<CircleCollider2D>().offset = new Vector2(gameObject.GetComponent<CircleCollider2D>().offset.x, gameObject.GetComponent<CircleCollider2D>().offset.y - gameObject.transform.localScale.y);
-            //gameObject.GetComponent<CircleCollider2D>().radius += gameObject.transform.localScale.y / 2;
+        }
+    }
+    public void RemoveBall()
+    {
+        if(PickUpList.Count != 0)
+        {
+            Destroy(PickUpList[PickUpList.Count - 1]);
+            PickUpList.RemoveAt(PickUpList.Count - 1);
+
+            gameObject.GetComponent<CircleCollider2D>().offset = new Vector2(gameObject.GetComponent<CircleCollider2D>().offset.x, gameObject.GetComponent<CircleCollider2D>().offset.y + gameObject.transform.localScale.y);
+
+            Instantiate(PickUp, new Vector2(gameObject.transform.position.x-1.5f, gameObject.transform.position.y - gameObject.transform.localScale.y * (PickUpList.Count + 1)), Quaternion.identity).GetComponent<Rigidbody2D>().AddForce(new Vector2(Random.Range(-250,0), Random.Range(-5, 250)));
         }
     }
 }
