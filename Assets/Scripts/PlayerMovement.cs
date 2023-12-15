@@ -11,6 +11,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private GameObject PickUp;
     [SerializeField] private GameObject PickedUp;
     [SerializeField] private List<GameObject> PickUpList;
+    [SerializeField] private GameObject CameraLookAt;
     private Rigidbody2D rb;
 
     bool isGrounded;
@@ -69,6 +70,7 @@ public class PlayerMovement : MonoBehaviour
             PickUpList[PickUpList.Count-1].tag = "PickedUp"; //add tag (just to be sure)
             gameObject.transform.position = new Vector2(gameObject.transform.position.x, gameObject.transform.position.y + gameObject.transform.localScale.y); //moves player up
             gameObject.GetComponent<CircleCollider2D>().offset = new Vector2(gameObject.GetComponent<CircleCollider2D>().offset.x, gameObject.GetComponent<CircleCollider2D>().offset.y - gameObject.transform.localScale.y); //changes offset so we don't bug into the ground
+            CameraLookAt.transform.position = new Vector2(CameraLookAt.transform.position.x, CameraLookAt.transform.position.y - gameObject.transform.localScale.y / 2); //moves camera look at
         }
     }
     public bool RemoveBall()
@@ -81,6 +83,7 @@ public class PlayerMovement : MonoBehaviour
             gameObject.GetComponent<CircleCollider2D>().offset = new Vector2(gameObject.GetComponent<CircleCollider2D>().offset.x, gameObject.GetComponent<CircleCollider2D>().offset.y + gameObject.transform.localScale.y); //undo offset so we don't float
 
             Instantiate(PickUp, new Vector2(gameObject.transform.position.x-1.5f, gameObject.transform.position.y - gameObject.transform.localScale.y * (PickUpList.Count + 1)), Quaternion.identity).GetComponent<Rigidbody2D>().AddForce(new Vector2(Random.Range(-250,0), Random.Range(-5, 250))); //spawn loose ball back and give it random physics
+            CameraLookAt.transform.position = new Vector2(CameraLookAt.transform.position.x, CameraLookAt.transform.position.y + gameObject.transform.localScale.y / 2);//moves camera look at
             return true;
         }
         return false;
