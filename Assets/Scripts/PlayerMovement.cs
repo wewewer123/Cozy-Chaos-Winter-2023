@@ -7,13 +7,15 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float jumpForce = 7f;
     [SerializeField] private float moveSpeed = 7f;
     private Rigidbody2D rb;
+
     bool isGrounded;
+
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        gameObject.transform.GetChild(0).gameObject.SetActive(false);
     }
-
     private void Update()
     {
         MoveX = Input.GetAxis("Horizontal") * moveSpeed;
@@ -31,6 +33,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (hit.collider != null) isGrounded = true;
         else isGrounded = false;
+
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -38,6 +41,11 @@ public class PlayerMovement : MonoBehaviour
         if (collision.gameObject.CompareTag("PickUp"))
         {
             collision.gameObject.SetActive(false);
+            gameObject.transform.GetChild(0).gameObject.SetActive(true);
+            gameObject.transform.GetChild(0).gameObject.transform.position = new Vector2(gameObject.transform.position.x, gameObject.transform.position.y-gameObject.transform.localScale.y);
+            gameObject.transform.position = new Vector2(gameObject.transform.position.x, gameObject.transform.position.y + gameObject.transform.localScale.y);
+            gameObject.GetComponent<CircleCollider2D>().offset = new Vector2(gameObject.GetComponent<CircleCollider2D>().offset.x, gameObject.GetComponent<CircleCollider2D>().offset.y - gameObject.transform.localScale.y);
+            //gameObject.GetComponent<CircleCollider2D>().radius += gameObject.transform.localScale.y / 2;
         }
     }
 }
