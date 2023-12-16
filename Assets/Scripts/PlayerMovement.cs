@@ -17,6 +17,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeReference] private ParticleSystem GroundParticles;
     [SerializeReference] private GameObject scarf;
     private bool isGrounded;
+    private int ballsCanPickup = 5;
     private Rigidbody2D rb;
     private SpriteRenderer sr;
     private CapsuleCollider2D cc;
@@ -48,7 +49,9 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        RaycastHit2D tophit = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y + 0.5f), Vector2.up, 0.5f); //raycast to check if there is a ceiling
         RaycastHit2D hit = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y-(1*PickUpList.Count)), Vector2.down, 1.00025f-0.40f); //raycast to check if grounded
+
         if (hit.collider != null)
         {
             if (hit.collider.CompareTag("Ground"))
@@ -74,7 +77,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("PickUp"))
+        if (collision.gameObject.CompareTag("PickUp") && PickUpList.Count <= ballsCanPickup)
         {
             if(collision.gameObject.GetComponent<PickUp>().cooldownDone)
             {
