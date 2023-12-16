@@ -15,14 +15,17 @@ public class PlayerMovement : MonoBehaviour
     [SerializeReference] private GameObject PickedUp;
     [SerializeReference] private GameObject CameraLookAt;
     [SerializeReference] private ParticleSystem GroundParticles;
+    [SerializeReference] private GameObject scarf;
     private bool isGrounded;
     private Rigidbody2D rb;
     private SpriteRenderer sr;
+    private CapsuleCollider2D cc;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
+        cc = GetComponent<CapsuleCollider2D>();
     }
 
     private void Update()
@@ -77,9 +80,13 @@ public class PlayerMovement : MonoBehaviour
             {
                 Destroy(collision.gameObject); //romove loose ball
                 PickUpList.Add(Instantiate(PickedUp, new Vector2(gameObject.transform.position.x, gameObject.transform.position.y - gameObject.transform.localScale.y * (PickUpList.Count + 1)), Quaternion.identity, gameObject.transform)); //instantiate snowball beneath player
-                                                                                                                                                                                                                                              // PickUpList[PickUpList.Count-1].tag = "PickedUp"; //add tag (just to be sure)
+                scarf.SetActive(true);
+
+                // Fix collider and move player up                                                                                                                                                                                                                         // PickUpList[PickUpList.Count-1].tag = "PickedUp"; //add tag (just to be sure)
                 gameObject.transform.position = new Vector2(gameObject.transform.position.x, gameObject.transform.position.y + gameObject.transform.localScale.y); //moves player up
-                gameObject.GetComponent<CircleCollider2D>().offset = new Vector2(gameObject.GetComponent<CircleCollider2D>().offset.x, gameObject.GetComponent<CircleCollider2D>().offset.y - gameObject.transform.localScale.y); //changes offset so we don't bug into the ground
+                cc.offset = new Vector2(cc.offset.x, cc.offset.y - .5f); //changes offset so we don't bug into the ground
+                cc.size = new Vector2(cc.size.x, cc.size.y + 1); //changes size so we don't bug into the ground
+
                 CameraLookAt.transform.position = new Vector2(CameraLookAt.transform.position.x, CameraLookAt.transform.position.y - gameObject.transform.localScale.y / 2); //moves camera look at
             }
         }
@@ -92,10 +99,12 @@ public class PlayerMovement : MonoBehaviour
             Destroy(PickUpList[PickUpList.Count - 1]); //destroys gameobject
             PickUpList.RemoveAt(PickUpList.Count - 1); //also remove it from list (for consistency sake
 
-            gameObject.GetComponent<CircleCollider2D>().offset = new Vector2(gameObject.GetComponent<CircleCollider2D>().offset.x, gameObject.GetComponent<CircleCollider2D>().offset.y + gameObject.transform.localScale.y); //undo offset so we don't float
+            cc.offset = new Vector2(cc.offset.x, cc.offset.y + .5f); //undo offset so we don't float
+            cc.size = new Vector2(cc.size.x, cc.size.y - 1); //undo size so we don't float
 
-            Instantiate(PickUp, new Vector2(gameObject.transform.position.x, gameObject.transform.position.y - gameObject.transform.localScale.y * (PickUpList.Count + 1)-0.1f), Quaternion.identity).GetComponent<PickUp>().Spawned(cooldown); //spawn loose ball back and give it random physics
+            Instantiate(PickUp, new Vector2(gameObject.transform.position.x + Mathf.Clamp(MoveX, -1, 1), gameObject.transform.position.y - gameObject.transform.localScale.y * (PickUpList.Count + 1)-0.1f), Quaternion.identity).GetComponent<PickUp>().Spawned(cooldown); //spawn loose ball back and give it random physics
             CameraLookAt.transform.position = new Vector2(CameraLookAt.transform.position.x, CameraLookAt.transform.position.y + gameObject.transform.localScale.y / 2);//moves camera look at
+            if (PickUpList.Count == 0) scarf.SetActive(false); //if no balls left, hide scarf
             return true;
         }
         return false;
