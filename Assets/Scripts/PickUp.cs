@@ -6,17 +6,6 @@ public class PickUp : MonoBehaviour
 {
     [SerializeField] private float cooldown = 5f;
     public bool cooldownDone = true;
-    // Start is called before the first frame update
-    void Start()
-    {
-        //Spawned(false);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
     public void Spawned(bool CoolDown)
     {
         cooldownDone = false;

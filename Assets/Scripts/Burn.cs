@@ -19,7 +19,6 @@ public class Burn : MonoBehaviour
         // If player has no balls left, stop burning
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
-
     private void OnTriggerEnter2D(Collider2D collider)
     {
         if (collider.gameObject.CompareTag("Player")) StartCoroutine(BurnTimer());
