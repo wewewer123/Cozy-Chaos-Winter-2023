@@ -717,6 +717,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 8770991120977192112, guid: c6cd8e05346308b46bf829e2dfe217f1, type: 3}
+      propertyPath: accelSlowdown
+      value: 0.75
+      objectReference: {fileID: 0}
     - target: {fileID: 8770991120977192115, guid: c6cd8e05346308b46bf829e2dfe217f1, type: 3}
       propertyPath: m_Name
       value: Player
