@@ -92,6 +92,7 @@ public class PlayerMovement : MonoBehaviour
             CameraLookAt.transform.position = new Vector2(CameraLookAt.transform.position.x, CameraLookAt.transform.position.y + gameObject.transform.localScale.y / 2);//moves camera look at
             return true;
         }
+
         return false;
     }
 }
