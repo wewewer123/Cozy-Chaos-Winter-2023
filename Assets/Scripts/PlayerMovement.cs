@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,7 +9,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float moveSpeed = 7f;
     [SerializeField] private GameObject PickUp;
     [SerializeField] private GameObject PickedUp;
-    [SerializeField] private List<GameObject> PickUpList;
+    public List<GameObject> PickUpList;
     [SerializeField] private GameObject CameraLookAt;
     private Rigidbody2D rb;
     [SerializeField] public float health = 1f;
@@ -20,14 +19,14 @@ public class PlayerMovement : MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        
+
     }
     private void Update()
     {
         //gets momentum and moves it
         MoveX = Input.GetAxis("Horizontal") * moveSpeed;
         MoveY = Input.GetAxis("Vertical");
-        
+
 
         if (Input.GetKeyDown(KeyCode.W) && (isGrounded || PickUpList.Count >= 1)) //check if you can jump
         {
