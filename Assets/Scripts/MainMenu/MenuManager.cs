@@ -1,6 +1,6 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MenuManager : MonoBehaviour
 {
@@ -21,7 +21,7 @@ public class MenuManager : MonoBehaviour
         else
             Debug.LogWarning("There shouldn't be more than one MenuManager in scene");
 
-        
+
     }
 
     // Why IEnumerator? -> Has to wait one frame for the Menus to start
@@ -39,5 +39,10 @@ public class MenuManager : MonoBehaviour
     {
         if (onSetMenu != null)
             onSetMenu(menuName);
+    }
+
+    public void StartGame()
+    {
+        SceneManager.LoadScene(1); // Build index 1 is Level1
     }
 }

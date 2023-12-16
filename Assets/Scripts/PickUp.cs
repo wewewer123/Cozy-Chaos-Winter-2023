@@ -4,23 +4,26 @@ using UnityEngine;
 
 public class PickUp : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private float cooldown = 5f;
+    public bool cooldownDone = true;
+    public void Spawned(bool CoolDown)
     {
-        gameObject.tag = "PickUp";
-        GetComponent<CircleCollider2D>();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-    }
-    void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("PickUp")) //why do we do it like this? this would make snowballs deactivate eachother even without player present.
+        cooldownDone = false;
+        gameObject.GetComponent<Rigidbody2D>().AddForce(new Vector2(Random.Range(-250, 250), Random.Range(-250, 0)));
+        if (CoolDown)
         {
-            collision.gameObject.SetActive(false);
+            StartCoroutine(waitTime());
         }
+        else
+        {
+            cooldownDone = true;
+        }
+    }
+    private IEnumerator waitTime()
+    {
+        cooldownDone = false;
+        yield return new WaitForSeconds(cooldown);
+        cooldownDone = true;
     }
 }
 
