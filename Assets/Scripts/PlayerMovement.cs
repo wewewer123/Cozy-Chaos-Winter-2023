@@ -5,25 +5,25 @@ public class PlayerMovement : MonoBehaviour
 {
     private float MoveX;
     private float MoveY;
+    [Header("Movement")]
     [SerializeField] private float jumpForce = 7f;
     [SerializeField] private float moveSpeed = 7f;
-    [SerializeField] private GameObject PickUp;
-    [SerializeField] private GameObject PickedUp;
-    public List<GameObject> PickUpList;
-    [SerializeField] private GameObject CameraLookAt;
+    public List<GameObject> PickUpList; // Used by burn script for ball count
+    [Header("References")]
+    [SerializeReference] private GameObject PickUp;
+    [SerializeReference] private GameObject PickedUp;
+    [SerializeReference] private GameObject CameraLookAt;
     private Rigidbody2D rb;
-    [SerializeField] public float health = 1f;
-    bool isGrounded;
-
+    private bool isGrounded;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-
     }
+
     private void Update()
     {
-        //gets momentum and moves it
+        // Gets momentum and moves it
         MoveX = Input.GetAxis("Horizontal") * moveSpeed;
         MoveY = Input.GetAxis("Vertical");
 
@@ -31,11 +31,9 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.W) && (isGrounded || PickUpList.Count >= 1)) //check if you can jump
         {
             rb.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
-            if (!isGrounded)
-            {
-                RemoveBall();
-            }
+            if (!isGrounded) RemoveBall();
         }
+
         if (Input.GetKey(KeyCode.S) && isGrounded) rb.AddForce(new Vector2(0f, MoveY), ForceMode2D.Impulse); //go down
 
         rb.velocity = new Vector2(MoveX, rb.velocity.y);
@@ -61,18 +59,19 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("PickUp"))
         {
             Destroy(collision.gameObject); //romove loose ball
             PickUpList.Add(Instantiate(PickedUp, new Vector2(gameObject.transform.position.x, gameObject.transform.position.y - gameObject.transform.localScale.y * (PickUpList.Count + 1)), Quaternion.identity, gameObject.transform)); //instantiate snowball beneath player
-            PickUpList[PickUpList.Count-1].tag = "PickedUp"; //add tag (just to be sure)
+            // PickUpList[PickUpList.Count-1].tag = "PickedUp"; //add tag (just to be sure)
             gameObject.transform.position = new Vector2(gameObject.transform.position.x, gameObject.transform.position.y + gameObject.transform.localScale.y); //moves player up
             gameObject.GetComponent<CircleCollider2D>().offset = new Vector2(gameObject.GetComponent<CircleCollider2D>().offset.x, gameObject.GetComponent<CircleCollider2D>().offset.y - gameObject.transform.localScale.y); //changes offset so we don't bug into the ground
             CameraLookAt.transform.position = new Vector2(CameraLookAt.transform.position.x, CameraLookAt.transform.position.y - gameObject.transform.localScale.y / 2); //moves camera look at
         }
     }
+
     public bool RemoveBall()
     {
         if(PickUpList.Count != 0)
