@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Burn : MonoBehaviour
 {
@@ -14,6 +15,9 @@ public class Burn : MonoBehaviour
             playerMovement.RemoveBall(true);
             yield return new WaitForSeconds(timeInterval);
         }
+
+        // If player has no balls left, stop burning
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     private void OnTriggerEnter2D(Collider2D collider)
