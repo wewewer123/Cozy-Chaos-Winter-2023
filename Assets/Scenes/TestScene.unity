@@ -2175,11 +2175,8 @@ MonoBehaviour:
   PickUp: {fileID: 2473912822316316176, guid: d38b025965a7f3b49ac6a7aefeeb8fbf, type: 3}
   PickedUp: {fileID: 2473912822316316176, guid: ca9fb536293af4f40bb71c3e8af4f199, type: 3}
   PickUpList: []
-<<<<<<< HEAD:Assets/Scenes/TestScene.unity
-  health: 1
-=======
   CameraLookAt: {fileID: 777086160}
->>>>>>> 6c11d71ec202b5bcf8f7d75358bf1822a756ae54:Assets/Scenes/SampleScene.unity
+
 --- !u!212 &2091665235
 SpriteRenderer:
   m_ObjectHideFlags: 0
