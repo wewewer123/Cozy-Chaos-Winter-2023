@@ -49,8 +49,20 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        RaycastHit2D tophit = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y + 0.5f), Vector2.up, 0.5f); //raycast to check if there is a ceiling
+        RaycastHit2D tophit = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y+(1*PickUpList.Count)), Vector2.up, 5.0f); //raycast to check if there is a ceiling
         RaycastHit2D hit = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y-(1*PickUpList.Count)), Vector2.down, 1.00025f-0.40f); //raycast to check if grounded
+
+        if (tophit.collider != null)
+        {
+            if (tophit.collider.CompareTag("Ground"))
+            {
+                ballsCanPickup = Mathf.FloorToInt(tophit.distance);
+            }
+        }
+        else
+        {
+            ballsCanPickup = 5;
+        }
 
         if (hit.collider != null)
         {
@@ -77,7 +89,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("PickUp"))
+        if (collision.gameObject.CompareTag("PickUp") && PickUpList.Count <= ballsCanPickup)
         {
             if(collision.gameObject.GetComponent<PickUp>().cooldownDone)
             {
@@ -105,7 +117,9 @@ public class PlayerMovement : MonoBehaviour
             cc.offset = new Vector2(cc.offset.x, cc.offset.y + .5f); //undo offset so we don't float
             cc.size = new Vector2(cc.size.x, cc.size.y - 1); //undo size so we don't float
 
-            Instantiate(PickUp, new Vector2(gameObject.transform.position.x + Mathf.Clamp(MoveX, -1, 1), gameObject.transform.position.y - gameObject.transform.localScale.y * (PickUpList.Count + 1)-0.1f), Quaternion.identity).GetComponent<PickUp>().Spawned(cooldown); //spawn loose ball back and give it random physics
+            GameObject NewPickUp = Instantiate(PickUp, new Vector2(gameObject.transform.position.x, gameObject.transform.position.y - gameObject.transform.localScale.y * (PickUpList.Count + 1)-0.1f), Quaternion.identity);
+            NewPickUp.GetComponent<PickUp>().Spawned(cooldown, rb.velocity.x); //spawn new ball
+
             CameraLookAt.transform.position = new Vector2(CameraLookAt.transform.position.x, CameraLookAt.transform.position.y + gameObject.transform.localScale.y / 2);//moves camera look at
             if (PickUpList.Count == 0) scarf.SetActive(false); //if no balls left, hide scarf
             return true;
