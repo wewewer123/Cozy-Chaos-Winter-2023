@@ -1,45 +1,29 @@
 using System.Collections;
-using System.Collections.Generic;
-using System.Threading;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Burn : MonoBehaviour
 {
-    // Start is called before the first frame update
-  
-    [SerializeField] PlayerMovement playerMovement;
-    public float timeInterval = 2f;
-    
-    bool runTimer = false;
-    private float time;
-    void Start()
+    [SerializeField] PlayerMovement playerMovement; // Reference to Player script
+    [SerializeField] float timeInterval = 2f; // Time between each ball burned
+
+    private IEnumerator BurnTimer()
     {
-        time = timeInterval;
+        // While player has balls burn them
+        while (playerMovement.PickUpList.Count > 0)
+        {
+            playerMovement.RemoveBall();
+            yield return new WaitForSeconds(timeInterval);
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    void OnTriggerEnter2D(Collider2D collider)
     {
-        if (playerMovement.health <= 0) Debug.Log("Game Over wow omg so cool!"); //Then here we'd have a GameOver function call
-        //Debug.Log(playerMovement.health);
-        if (runTimer) time -= Time.deltaTime;
-        if (timeInterval <= 0) time = timeInterval; 
-
+        if (collider.gameObject.CompareTag("Player")) StartCoroutine(BurnTimer());
     }
 
-    void OnCollisionEnter2D(Collision2D collider) 
+    void OnTriggerExit2D(Collider2D collider)
     {
-        playerMovement.RemoveBall();
-        Debug.Log("started collision");
-        
+        if (collider.gameObject.CompareTag("Player")) StopAllCoroutines();
     }
-
-    void OnCollisionStay(Collision collision) { runTimer = true; Debug.Log("is colliding"); }
-
-
-    // Gets called when the object exits the collision
-    void OnCollisionExit(Collision collision) { runTimer = false; Debug.Log("stopped colliding"); }
-    
-
-
 }

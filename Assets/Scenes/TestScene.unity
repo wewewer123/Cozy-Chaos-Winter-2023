@@ -671,10 +671,10 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: 1.4352891}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -685,7 +685,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1, y: 2.0675707}
   m_EdgeRadius: 0
 --- !u!212 &530743569
 SpriteRenderer:
@@ -2176,7 +2176,7 @@ MonoBehaviour:
   PickedUp: {fileID: 2473912822316316176, guid: ca9fb536293af4f40bb71c3e8af4f199, type: 3}
   PickUpList: []
   CameraLookAt: {fileID: 777086160}
-
+  health: 1
 --- !u!212 &2091665235
 SpriteRenderer:
   m_ObjectHideFlags: 0
