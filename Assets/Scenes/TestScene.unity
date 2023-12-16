@@ -2051,7 +2051,7 @@ MonoBehaviour:
   PickUp: {fileID: 2473912822316316176, guid: d38b025965a7f3b49ac6a7aefeeb8fbf, type: 3}
   PickedUp: {fileID: 2473912822316316176, guid: ca9fb536293af4f40bb71c3e8af4f199, type: 3}
   CameraLookAt: {fileID: 777086160}
-  isGrounded: 0
+  GroundParticles: {fileID: 5486985799948025259, guid: 865d562046c2cf549be33f9db802153e, type: 3}
 --- !u!212 &2091665235
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2092,7 +2092,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 20
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -2135,7 +2135,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 0.49
 --- !u!50 &2091665238
 Rigidbody2D:
   serializedVersion: 4
