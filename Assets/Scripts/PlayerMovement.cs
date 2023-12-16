@@ -12,13 +12,14 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private GameObject PickedUp;
     [SerializeField] private List<GameObject> PickUpList;
     private Rigidbody2D rb;
-
+    [SerializeField] public float health = 1f;
     bool isGrounded;
 
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        
     }
     private void Update()
     {
