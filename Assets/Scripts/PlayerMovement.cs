@@ -17,10 +17,12 @@ public class PlayerMovement : MonoBehaviour
     [SerializeReference] private ParticleSystem GroundParticles;
     private bool isGrounded;
     private Rigidbody2D rb;
+    private SpriteRenderer sr;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        sr = GetComponent<SpriteRenderer>();
     }
 
     private void Update()
@@ -29,6 +31,8 @@ public class PlayerMovement : MonoBehaviour
         MoveX = Input.GetAxis("Horizontal") * moveSpeed;
         MoveY = Input.GetAxis("Vertical");
 
+        if (MoveX > 0) sr.flipX = false;
+        else if (MoveX < 0) sr.flipX = true;
 
         if (Input.GetKeyDown(KeyCode.W) && (isGrounded || PickUpList.Count >= 1)) //check if you can jump
         {
