@@ -10,10 +10,11 @@ public class Level_Manager : MonoBehaviour
     public static int Current_Level = 0;
     public static Level_Manager Instance;
 
-    [SerializeField] private int Aux_Var = 0;  //This is just to see if the singletone maintains information inbetween scenes
+   
 
     private void Awake()
     {
+        //The singletone is created if there isnt one yet
         if (Level_Manager.Instance == null)
         {
             Level_Manager.Instance = this;
