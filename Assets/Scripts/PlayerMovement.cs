@@ -14,7 +14,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeReference] private GameObject PickUp;
     [SerializeReference] private GameObject PickedUp;
     [SerializeReference] private GameObject CameraLookAt;
-    [SerializeReference] private bool isGrounded;
+    private bool isGrounded;
     private Rigidbody2D rb;
 
     private void Start()
