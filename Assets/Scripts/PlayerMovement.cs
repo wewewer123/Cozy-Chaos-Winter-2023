@@ -14,6 +14,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeReference] private GameObject PickUp;
     [SerializeReference] private GameObject PickedUp;
     [SerializeReference] private GameObject CameraLookAt;
+    [SerializeReference] private ParticleSystem GroundParticles;
     private bool isGrounded;
     private Rigidbody2D rb;
 
@@ -50,6 +51,7 @@ public class PlayerMovement : MonoBehaviour
         {
             if (hit.collider.CompareTag("Ground"))
             {
+                if(!isGrounded) Instantiate(GroundParticles, new Vector2(transform.position.x, transform.position.y - PickUpList.Count), Quaternion.identity);
                 isGrounded = true;
             }
             else
@@ -66,7 +68,7 @@ public class PlayerMovement : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("PickUp"))
-        { 
+        {
             if(collision.gameObject.GetComponent<PickUp>().cooldownDone)
             {
                 Destroy(collision.gameObject); //romove loose ball
