@@ -11,7 +11,7 @@ public class Burn : MonoBehaviour
         // While player has balls burn them
         while (playerMovement.PickUpList.Count > 0)
         {
-            playerMovement.RemoveBall();
+            playerMovement.RemoveBall(true);
             yield return new WaitForSeconds(timeInterval);
         }
     }
