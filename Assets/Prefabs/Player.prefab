@@ -102,7 +102,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   jumpForce: 5
   moveSpeed: 6.5
-  accelSlowdown: 3.5
+  accelSlowdown: 0.75
   PickUpList: []
   PickUp: {fileID: 2473912822316316176, guid: d38b025965a7f3b49ac6a7aefeeb8fbf, type: 3}
   PickedUp: {fileID: 2473912822316316176, guid: ca9fb536293af4f40bb71c3e8af4f199, type: 3}

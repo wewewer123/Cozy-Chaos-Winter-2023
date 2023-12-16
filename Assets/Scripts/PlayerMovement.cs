@@ -41,11 +41,6 @@ public class PlayerMovement : MonoBehaviour
         }
 
         if (Input.GetKey(KeyCode.S) && isGrounded) rb.AddForce(new Vector2(0f, MoveY), ForceMode2D.Impulse); //go down
-
-        if(-moveSpeed < rb.velocity.x && rb.velocity.x < moveSpeed)
-        {
-            rb.AddForce(new Vector2(MoveX/accelSlowdown, 0));
-        }
     }
 
     private void FixedUpdate()
@@ -66,6 +61,11 @@ public class PlayerMovement : MonoBehaviour
         else
         {
             isGrounded = false;
+        }
+
+        if(-moveSpeed < rb.velocity.x && rb.velocity.x < moveSpeed)
+        {
+            rb.AddForce(new Vector2(MoveX/accelSlowdown, 0));
         }
     }
 
