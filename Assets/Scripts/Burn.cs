@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class Burn : MonoBehaviour
 {
@@ -17,12 +16,12 @@ public class Burn : MonoBehaviour
         }
     }
 
-    void OnTriggerEnter2D(Collider2D collider)
+    private void OnTriggerEnter2D(Collider2D collider)
     {
         if (collider.gameObject.CompareTag("Player")) StartCoroutine(BurnTimer());
     }
 
-    void OnTriggerExit2D(Collider2D collider)
+    private void OnTriggerExit2D(Collider2D collider)
     {
         if (collider.gameObject.CompareTag("Player")) StopAllCoroutines();
     }
