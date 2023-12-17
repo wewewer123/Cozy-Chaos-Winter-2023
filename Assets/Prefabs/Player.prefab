@@ -196,6 +196,7 @@ MonoBehaviour:
   CameraLookAt: {fileID: 8770991122337908530}
   GroundParticles: {fileID: 5486985799948025259, guid: 865d562046c2cf549be33f9db802153e, type: 3}
   scarf: {fileID: 8911119363934143239}
+  sfxRoll: {fileID: 1022502779042681162}
 --- !u!50 &8770991120977192116
 Rigidbody2D:
   serializedVersion: 4
@@ -247,7 +248,7 @@ AudioSource:
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
