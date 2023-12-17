@@ -21,6 +21,7 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody2D rb;
     private SpriteRenderer sr;
     private CapsuleCollider2D cc;
+    private AudioSource sfxRoll;
 
     private void Start()
     {
@@ -35,8 +36,16 @@ public class PlayerMovement : MonoBehaviour
         MoveX = Input.GetAxis("Horizontal") * moveSpeed;
         MoveY = Input.GetAxis("Vertical");
 
-        if (MoveX > 0) sr.flipX = false;
-        else if (MoveX < 0) sr.flipX = true;
+        if (MoveX > 0) {
+            sr.flipX = false;
+            sfxRoll.Play();
+        }
+        else if (MoveX < 0)
+        {
+            sr.flipX = true;
+            sfxRoll.Play();
+        }
+        else sfxRoll.Stop();
 
         if (Input.GetKeyDown(KeyCode.W) && (isGrounded || PickUpList.Count >= 1)) //check if you can jump
         {
