@@ -23,8 +23,10 @@ public class Burn : MonoBehaviour
 
         // If player has no balls left, stop burning
         yield return new WaitForSeconds(timeInterval);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        if (playerMovement.PickUpList.Count == 0) SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        else StartCoroutine(BurnTimer());
     }
+
     private void OnTriggerEnter2D(Collider2D collider)
     {
         if (collider.gameObject.CompareTag("Player")) StartCoroutine(BurnTimer());
