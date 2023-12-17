@@ -48,14 +48,14 @@ public class PlayerMovement : MonoBehaviour
         else if (MoveX < 0) sr.flipX = true;
 
 
-        if (Input.GetKeyDown(KeyCode.W) && (isGrounded || PickUpList.Count >= 1)) //check if you can jump
+        if ((Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.Space)) && (isGrounded || PickUpList.Count >= 1)) //check if you can jump
         {
             if(sfxJump.isPlaying) sfxJump.Play();
             rb.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
             if (!isGrounded) RemoveBall(false);
         }
 
-        if (Input.GetKey(KeyCode.S) && !isGrounded) rb.AddForce(new Vector2(0f, MoveY * 0.1f), ForceMode2D.Impulse); //go down
+        if ((Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) && !isGrounded) rb.AddForce(new Vector2(0f, MoveY * 0.1f), ForceMode2D.Impulse); //go down
     }
 
     private void FixedUpdate()
