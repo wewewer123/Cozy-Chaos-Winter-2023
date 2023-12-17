@@ -1,0 +1,156 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: SpriteAtlas
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 0
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: DefaultTexturePlatform
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: -1
+      m_TextureCompression: 0
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 0
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 1
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 2800000, guid: 9c161fdb28fa5a94993bb24cad36f0ba, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 1457432225, guid: 9c161fdb28fa5a94993bb24cad36f0ba, type: 3}
+  - {fileID: -1527854771, guid: 9c161fdb28fa5a94993bb24cad36f0ba, type: 3}
+  - {fileID: 1547534912, guid: 9c161fdb28fa5a94993bb24cad36f0ba, type: 3}
+  - {fileID: -773833227, guid: 9c161fdb28fa5a94993bb24cad36f0ba, type: 3}
+  - {fileID: 193138539, guid: 9c161fdb28fa5a94993bb24cad36f0ba, type: 3}
+  - {fileID: 153256115, guid: 9c161fdb28fa5a94993bb24cad36f0ba, type: 3}
+  - {fileID: 1013156647, guid: 9c161fdb28fa5a94993bb24cad36f0ba, type: 3}
+  - {fileID: 69981401, guid: 9c161fdb28fa5a94993bb24cad36f0ba, type: 3}
+  - {fileID: -1031525089, guid: 9c161fdb28fa5a94993bb24cad36f0ba, type: 3}
+  - {fileID: -464956513, guid: 9c161fdb28fa5a94993bb24cad36f0ba, type: 3}
+  - {fileID: 1275728448, guid: 9c161fdb28fa5a94993bb24cad36f0ba, type: 3}
+  - {fileID: -516857424, guid: 9c161fdb28fa5a94993bb24cad36f0ba, type: 3}
+  - {fileID: -515030209, guid: 9c161fdb28fa5a94993bb24cad36f0ba, type: 3}
+  - {fileID: 535279003, guid: 9c161fdb28fa5a94993bb24cad36f0ba, type: 3}
+  - {fileID: -1048102559, guid: 9c161fdb28fa5a94993bb24cad36f0ba, type: 3}
+  - {fileID: 1263445824, guid: 9c161fdb28fa5a94993bb24cad36f0ba, type: 3}
+  - {fileID: 505755053, guid: 9c161fdb28fa5a94993bb24cad36f0ba, type: 3}
+  - {fileID: -120900858, guid: 9c161fdb28fa5a94993bb24cad36f0ba, type: 3}
+  - {fileID: -290239622, guid: 9c161fdb28fa5a94993bb24cad36f0ba, type: 3}
+  - {fileID: 1457683140, guid: 9c161fdb28fa5a94993bb24cad36f0ba, type: 3}
+  - {fileID: 1722183891, guid: 9c161fdb28fa5a94993bb24cad36f0ba, type: 3}
+  - {fileID: 1639548729, guid: 9c161fdb28fa5a94993bb24cad36f0ba, type: 3}
+  - {fileID: -163880505, guid: 9c161fdb28fa5a94993bb24cad36f0ba, type: 3}
+  - {fileID: 1010060213, guid: 9c161fdb28fa5a94993bb24cad36f0ba, type: 3}
+  - {fileID: -185911215, guid: 9c161fdb28fa5a94993bb24cad36f0ba, type: 3}
+  - {fileID: 1400523685, guid: 9c161fdb28fa5a94993bb24cad36f0ba, type: 3}
+  - {fileID: -998847229, guid: 9c161fdb28fa5a94993bb24cad36f0ba, type: 3}
+  - {fileID: 2085338855, guid: 9c161fdb28fa5a94993bb24cad36f0ba, type: 3}
+  - {fileID: -459076359, guid: 9c161fdb28fa5a94993bb24cad36f0ba, type: 3}
+  - {fileID: -1105577839, guid: 9c161fdb28fa5a94993bb24cad36f0ba, type: 3}
+  - {fileID: 2018051304, guid: 9c161fdb28fa5a94993bb24cad36f0ba, type: 3}
+  - {fileID: -1262059601, guid: 9c161fdb28fa5a94993bb24cad36f0ba, type: 3}
+  - {fileID: 651037154, guid: 9c161fdb28fa5a94993bb24cad36f0ba, type: 3}
+  - {fileID: 880576835, guid: 9c161fdb28fa5a94993bb24cad36f0ba, type: 3}
+  - {fileID: 2043220616, guid: 9c161fdb28fa5a94993bb24cad36f0ba, type: 3}
+  - {fileID: 1552043886, guid: 9c161fdb28fa5a94993bb24cad36f0ba, type: 3}
+  - {fileID: 677598221, guid: 9c161fdb28fa5a94993bb24cad36f0ba, type: 3}
+  - {fileID: 1590175787, guid: 9c161fdb28fa5a94993bb24cad36f0ba, type: 3}
+  - {fileID: 1323477296, guid: 9c161fdb28fa5a94993bb24cad36f0ba, type: 3}
+  - {fileID: 477543332, guid: 9c161fdb28fa5a94993bb24cad36f0ba, type: 3}
+  - {fileID: -975104347, guid: 9c161fdb28fa5a94993bb24cad36f0ba, type: 3}
+  - {fileID: -871505672, guid: 9c161fdb28fa5a94993bb24cad36f0ba, type: 3}
+  - {fileID: 1820947467, guid: 9c161fdb28fa5a94993bb24cad36f0ba, type: 3}
+  - {fileID: 284661040, guid: 9c161fdb28fa5a94993bb24cad36f0ba, type: 3}
+  - {fileID: -2092690264, guid: 9c161fdb28fa5a94993bb24cad36f0ba, type: 3}
+  - {fileID: -616630688, guid: 9c161fdb28fa5a94993bb24cad36f0ba, type: 3}
+  - {fileID: -263694923, guid: 9c161fdb28fa5a94993bb24cad36f0ba, type: 3}
+  - {fileID: 236622504, guid: 9c161fdb28fa5a94993bb24cad36f0ba, type: 3}
+  - {fileID: 851388610, guid: 9c161fdb28fa5a94993bb24cad36f0ba, type: 3}
+  - {fileID: 168062896, guid: 9c161fdb28fa5a94993bb24cad36f0ba, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - Snow_Covered_Tileset_21
+  - Snow_Covered_Tileset_20
+  - Snow_Covered_Tileset_23
+  - Snow_Covered_Tileset_22
+  - Snow_Covered_Tileset_25
+  - Snow_Covered_Tileset_24
+  - Snow_Covered_Tileset_27
+  - Snow_Covered_Tileset_26
+  - Snow_Covered_Tileset_29
+  - Snow_Covered_Tileset_28
+  - Snow_Covered_Tileset_38
+  - Snow_Covered_Tileset_39
+  - Snow_Covered_Tileset_36
+  - Snow_Covered_Tileset_37
+  - Snow_Covered_Tileset_34
+  - Snow_Covered_Tileset_35
+  - Snow_Covered_Tileset_32
+  - Snow_Covered_Tileset_33
+  - Snow_Covered_Tileset_30
+  - Snow_Covered_Tileset_31
+  - Snow_Covered_Tileset_47
+  - Snow_Covered_Tileset_18
+  - Snow_Covered_Tileset_46
+  - Snow_Covered_Tileset_19
+  - Snow_Covered_Tileset_45
+  - Snow_Covered_Tileset_44
+  - Snow_Covered_Tileset_43
+  - Snow_Covered_Tileset_42
+  - Snow_Covered_Tileset_41
+  - Snow_Covered_Tileset_40
+  - Snow_Covered_Tileset_10
+  - Snow_Covered_Tileset_11
+  - Snow_Covered_Tileset_12
+  - Snow_Covered_Tileset_13
+  - Snow_Covered_Tileset_14
+  - Snow_Covered_Tileset_15
+  - Snow_Covered_Tileset_49
+  - Snow_Covered_Tileset_16
+  - Snow_Covered_Tileset_48
+  - Snow_Covered_Tileset_17
+  - Snow_Covered_Tileset_9
+  - Snow_Covered_Tileset_8
+  - Snow_Covered_Tileset_1
+  - Snow_Covered_Tileset_0
+  - Snow_Covered_Tileset_3
+  - Snow_Covered_Tileset_2
+  - Snow_Covered_Tileset_5
+  - Snow_Covered_Tileset_4
+  - Snow_Covered_Tileset_7
+  - Snow_Covered_Tileset_6
+  m_RenderDataMap: {}
+  m_Tag: SpriteAtlas
+  m_IsVariant: 0
