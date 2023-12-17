@@ -18,12 +18,12 @@ public class PlayerMovement : MonoBehaviour
     [SerializeReference] private GameObject CameraLookAt;
     [SerializeReference] private ParticleSystem GroundParticles;
     [SerializeReference] private GameObject scarf;
+    [SerializeReference] AudioSource sfxRoll;
     private bool isGrounded;
     private int ballsCanPickup = 5;
     private Rigidbody2D rb;
     private SpriteRenderer sr;
     private CapsuleCollider2D cc;
-    private AudioSource sfxRoll;
 
     private void Start()
     {
@@ -38,17 +38,13 @@ public class PlayerMovement : MonoBehaviour
         MoveX = Input.GetAxis("Horizontal") * moveSpeed;
         MoveY = Input.GetAxis("Vertical");
 
-      //  if (MoveX > 0)
-      //  {
-      //      sr.flipX = false;
-      //      sfxRoll.Play();
-      //  }
-      //  else if (MoveX < 0)
-      //  {
-      //      sr.flipX = true;
-      //      sfxRoll.Play();
-      //  }
-      //  else sfxRoll.Stop();
+
+        if ((rb.velocity.x >= 1 || rb.velocity.x <= -1) && isGrounded && !sfxRoll.isPlaying) sfxRoll.Play();
+        else if (rb.velocity.x < 1 && rb.velocity.x > -1 || !isGrounded) sfxRoll.Stop();
+
+        if (MoveX > 0) sr.flipX = false;
+        else if (MoveX < 0) sr.flipX = true;
+
 
         if (Input.GetKeyDown(KeyCode.W) && (isGrounded || PickUpList.Count >= 1)) //check if you can jump
         {
