@@ -7,6 +7,7 @@ public class Level_Manager : MonoBehaviour
     public static Level_Manager current { get => _current; }
     public static int Current_Level = 0;
     [SerializeField] GameObject deathMenu;
+    [SerializeField] GameObject pauseMenu;
     void Awake()
     {
         if (_current == null)
@@ -16,7 +17,17 @@ public class Level_Manager : MonoBehaviour
         }
         else
         {
+            Destroy(this.gameObject);
             Debug.LogWarning("There shouldn't be more than one LevelManager in scene");
+        }
+    }
+    private void Update() {
+        if (Input.GetKeyDown(KeyCode.P) && SceneManager.GetActiveScene().buildIndex != 0) {
+            if (pauseMenu.activeSelf) {
+                pauseMenu.SetActive(false);
+            } else {
+                pauseMenu.SetActive(true);
+            }
         }
     }
     static public void Level_Loader(int level)  //You can pass the index number of a level to load it
