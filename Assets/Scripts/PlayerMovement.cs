@@ -20,6 +20,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeReference] private ParticleSystem GroundParticles;
     [SerializeReference] private GameObject scarf;
     [SerializeReference] AudioSource sfxRoll;
+    [SerializeReference] AudioSource sfxJump;
     private bool isGrounded;
     private int ballsCanPickup = 5;
     private Rigidbody2D rb;
@@ -49,6 +50,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.W) && (isGrounded || PickUpList.Count >= 1)) //check if you can jump
         {
+            if(sfxJump.isPlaying) sfxJump.Play();
             rb.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
             if (!isGrounded) RemoveBall(false);
         }
@@ -77,6 +79,7 @@ public class PlayerMovement : MonoBehaviour
         {
             if (hit.collider.CompareTag("Ground"))
             {
+                if(sfxJump.isPlaying) sfxJump.Play();
                 if (!isGrounded) Instantiate(GroundParticles, new Vector2(transform.position.x, transform.position.y - PickUpList.Count), Quaternion.identity);
                 isGrounded = true;
             }
@@ -109,7 +112,6 @@ public class PlayerMovement : MonoBehaviour
                 scarf.SetActive(true);
 
                 // Fix collider and move player up                                                                                                                                                                                                                         // PickUpList[PickUpList.Count-1].tag = "PickedUp"; //add tag (just to be sure)
-                gameObject.transform.position = new Vector2(gameObject.transform.position.x, gameObject.transform.position.y + gameObject.transform.localScale.y); //moves player up
                 gameObject.transform.position = new Vector2(gameObject.transform.position.x, gameObject.transform.position.y + gameObject.transform.localScale.y); //moves player up
                 cc.offset = new Vector2(cc.offset.x, cc.offset.y - .5f); //changes offset so we don't bug into the ground
                 cc.size = new Vector2(cc.size.x, cc.size.y + 1); //changes size so we don't bug into the ground
