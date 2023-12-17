@@ -32,6 +32,8 @@ public class AudioManager : MonoBehaviour
     private int _currentTrackIndex;
     private Coroutine _currentTriggerCoroutine;
     private M_AudioClip _lastPlayedClip;
+    private Scene LastScene;
+
     private void Awake()
     {
         if (i == null)
@@ -67,11 +69,15 @@ public class AudioManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (_currentTriggerCoroutine != null)
+        if(scene != LastScene)
         {
-            StopCoroutine(_currentTriggerCoroutine);
+            if (_currentTriggerCoroutine != null)
+            {
+                StopCoroutine(_currentTriggerCoroutine);
+            }
+            PlayDefaultMusic();
+            LastScene = scene;
         }
-        PlayDefaultMusic();
     }
     private void LoadVolumeSettings()
     {
