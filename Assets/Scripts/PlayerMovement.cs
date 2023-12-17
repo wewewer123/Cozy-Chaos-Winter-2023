@@ -12,7 +12,10 @@ public class PlayerMovement : MonoBehaviour
     public List<GameObject> PickUpList; // Used by burn script for ball count
     [Header("References")]
     [SerializeReference] private GameObject PickUp;
+    [SerializeReference] private GameObject BluePickUp;
     [SerializeReference] private GameObject PickedUp;
+    [SerializeReference] private GameObject BluePickedUp;
+
     [SerializeReference] private GameObject CameraLookAt;
     [SerializeReference] private ParticleSystem GroundParticles;
     [SerializeReference] private GameObject scarf;
@@ -74,11 +77,11 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("PickUp"))
+        if (collision.gameObject.CompareTag("PickUp")) 
         {
-            if(collision.gameObject.GetComponent<PickUp>().cooldownDone)
+            if (collision.gameObject.GetComponent<PickUp>().cooldownDone)
             {
-                Destroy(collision.gameObject); //romove loose ball
+                Destroy(collision.gameObject); //remove loose ball
                 PickUpList.Add(Instantiate(PickedUp, new Vector2(gameObject.transform.position.x, gameObject.transform.position.y - gameObject.transform.localScale.y * (PickUpList.Count + 1)), Quaternion.identity, gameObject.transform)); //instantiate snowball beneath player
                 scarf.SetActive(true);
 
@@ -90,11 +93,31 @@ public class PlayerMovement : MonoBehaviour
                 CameraLookAt.transform.position = new Vector2(CameraLookAt.transform.position.x, CameraLookAt.transform.position.y - gameObject.transform.localScale.y / 2); //moves camera look at
             }
         }
+
+        else if (collision.gameObject.CompareTag("BluePickUp")) {
+
+            if (collision.gameObject.GetComponent<PickUp>().cooldownDone)
+            {
+                Destroy(collision.gameObject); //remove loose ball
+                PickUpList.Add(Instantiate(BluePickedUp, new Vector2(gameObject.transform.position.x, gameObject.transform.position.y - gameObject.transform.localScale.y * (PickUpList.Count + 1)), Quaternion.identity, gameObject.transform)); //instantiate blue snowball beneath player
+                scarf.SetActive(true);
+
+                // Fix collider and move player up                                                                                                                                                                                                                         // PickUpList[PickUpList.Count-1].tag = "PickedUp"; //add tag (just to be sure)
+                gameObject.transform.position = new Vector2(gameObject.transform.position.x, gameObject.transform.position.y + gameObject.transform.localScale.y); //moves player up
+                cc.offset = new Vector2(cc.offset.x, cc.offset.y - .5f); //changes offset so we don't bug into the ground
+                cc.size = new Vector2(cc.size.x, cc.size.y + 1); //changes size so we don't bug into the ground
+
+                CameraLookAt.transform.position = new Vector2(CameraLookAt.transform.position.x, CameraLookAt.transform.position.y - gameObject.transform.localScale.y / 2); //moves camera look at
+            }
+       
+        }
+
+        
     }
 
     public bool RemoveBall(bool cooldown)
     {
-        if(PickUpList.Count != 0)
+        if (PickUpList.Count != 0)
         {
             Destroy(PickUpList[PickUpList.Count - 1]); //destroys gameobject
             PickUpList.RemoveAt(PickUpList.Count - 1); //also remove it from list (for consistency sake
@@ -102,9 +125,41 @@ public class PlayerMovement : MonoBehaviour
             cc.offset = new Vector2(cc.offset.x, cc.offset.y + .5f); //undo offset so we don't float
             cc.size = new Vector2(cc.size.x, cc.size.y - 1); //undo size so we don't float
 
-            Instantiate(PickUp, new Vector2(gameObject.transform.position.x + Mathf.Clamp(MoveX, -1, 1), gameObject.transform.position.y - gameObject.transform.localScale.y * (PickUpList.Count + 1)-0.1f), Quaternion.identity).GetComponent<PickUp>().Spawned(cooldown); //spawn loose ball back and give it random physics
+            GameObject NewPickUp = Instantiate(PickUp, new Vector2(gameObject.transform.position.x, gameObject.transform.position.y - gameObject.transform.localScale.y * (PickUpList.Count + 1) - 0.1f), Quaternion.identity);
+            NewPickUp.GetComponent<PickUp>().Spawned(cooldown, rb.velocity.x); //spawn new ball
+
             CameraLookAt.transform.position = new Vector2(CameraLookAt.transform.position.x, CameraLookAt.transform.position.y + gameObject.transform.localScale.y / 2);//moves camera look at
             if (PickUpList.Count == 0) scarf.SetActive(false); //if no balls left, hide scarf
+            return true;
+        }
+        return false;
+    }
+
+    public bool RemoveBall(bool cooldown)
+    {
+        if(PickUpList.Count != 0)
+        {
+            Destroy(PickUpList[PickUpList.Count - 1]); //destroys gameobject
+            PickUpList.RemoveAt(PickUpList.Count - 1); //also remove it from list (for consistency sake)
+            
+            cc.offset = new Vector2(cc.offset.x, cc.offset.y + .5f); //undo offset so we don't float
+            cc.size = new Vector2(cc.size.x, cc.size.y - 1); //undo size so we don't float
+
+            if (PickUpList[PickUpList.Count - 1].CompareTag("BluePickedUp"))
+            {
+                Instantiate(BluePickUp, new Vector2(gameObject.transform.position.x + Mathf.Clamp(MoveX, -1, 1), gameObject.transform.position.y - gameObject.transform.localScale.y * (PickUpList.Count + 1) - 0.1f), Quaternion.identity).GetComponent<PickUp>().Spawned(cooldown); //spawn loose ball back and give it random physics
+                
+            }
+
+            else if (PickUpList[PickUpList.Count - 1].CompareTag("PickedUp"))
+            {
+                Instantiate(PickUp, new Vector2(gameObject.transform.position.x + Mathf.Clamp(MoveX, -1, 1), gameObject.transform.position.y - gameObject.transform.localScale.y * (PickUpList.Count + 1) - 0.1f), Quaternion.identity).GetComponent<PickUp>().Spawned(cooldown); //spawn loose ball back and give it random physics
+                
+            }
+
+            if (PickUpList.Count == 0) scarf.SetActive(false); //if no balls left, hide scarf
+            CameraLookAt.transform.position = new Vector2(CameraLookAt.transform.position.x, CameraLookAt.transform.position.y + gameObject.transform.localScale.y / 2);//moves camera look at
+
             return true;
         }
         return false;

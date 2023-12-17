@@ -7,6 +7,8 @@ TagManager:
   - PickUp
   - Ground
   - PickedUp
+  - BluePickUp
+  - BluePickedUp
   layers:
   - Default
   - TransparentFX

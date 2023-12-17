@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 2473912822316316396}
   - component: {fileID: 2473912822316316397}
   m_Layer: 2
-  m_Name: PickedUp
-  m_TagString: PickedUp
+  m_Name: BluePickedUp
+  m_TagString: BluePickedUp
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -74,7 +74,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 20
   m_Sprite: {fileID: 143495373, guid: 51d169165ea980c4cadcd95b95c2ee08, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.24705882, g: 0.8392157, b: 0.9529412, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
