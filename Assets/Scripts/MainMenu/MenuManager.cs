@@ -10,7 +10,6 @@ public class MenuManager : MonoBehaviour
 
     // Event called when setting menu
     public event System.Action<string> onSetMenu;
-
     [SerializeField] Menu startingMenu;
 
     // Singleton setup
@@ -20,8 +19,6 @@ public class MenuManager : MonoBehaviour
             _current = this;
         else
             Debug.LogWarning("There shouldn't be more than one MenuManager in scene");
-
-
     }
 
     // Why IEnumerator? -> Has to wait one frame for the Menus to start
@@ -44,5 +41,10 @@ public class MenuManager : MonoBehaviour
     public void StartGame()
     {
         SceneManager.LoadScene(1); // Build index 1 is Level1
+    }
+
+    public void ExitGame()
+    {
+        Application.Quit();
     }
 }
