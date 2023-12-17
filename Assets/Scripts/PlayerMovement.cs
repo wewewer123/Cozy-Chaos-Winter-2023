@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -57,8 +58,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        RaycastHit2D tophit = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y + (1 * PickUpList.Count)), Vector2.up, 5.0f); //raycast to check if there is a ceiling
-        RaycastHit2D hit = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y - (1 * PickUpList.Count)), Vector2.down, 1.00025f - 0.40f); //raycast to check if grounded
+        RaycastHit2D tophit = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y), Vector2.up, 5.0f); //raycast to check if there is a ceiling
+        RaycastHit2D hit = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y-(1*PickUpList.Count)), Vector2.down, 1.00025f-0.40f); //raycast to check if grounded
 
         if (tophit.collider != null)
         {
@@ -69,7 +70,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            ballsCanPickup = 5;
+            ballsCanPickup = 4;
         }
 
         if (hit.collider != null)
@@ -99,7 +100,7 @@ public class PlayerMovement : MonoBehaviour
     {
         bool isBlue = collision.gameObject.CompareTag("BluePickUp");
 
-        if ((collision.gameObject.CompareTag("PickUp") || collision.gameObject.CompareTag("BluePickUp") && PickUpList.Count <= ballsCanPickup ))
+        if (collision.gameObject.CompareTag("PickUp") || isBlue && PickUpList.Count <= ballsCanPickup && PickUpList.Count < 4)
         {
             if (collision.gameObject.GetComponent<PickUp>().cooldownDone)
             {
@@ -132,7 +133,7 @@ public class PlayerMovement : MonoBehaviour
             if (isBlue) return true;
 
             Vector2 NewPickUpPos = new Vector2(gameObject.transform.position.x, gameObject.transform.position.y - gameObject.transform.localScale.y * (PickUpList.Count + 1) - 0.1f);
-            
+
             GameObject NewPickUp = Instantiate(PickUp, NewPickUpPos, Quaternion.identity);
             NewPickUp.GetComponent<PickUp>().Spawned(cooldown, rb.velocity.x); //spawn new ball
 
