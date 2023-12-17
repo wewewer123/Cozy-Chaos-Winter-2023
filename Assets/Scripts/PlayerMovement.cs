@@ -13,7 +13,9 @@ public class PlayerMovement : MonoBehaviour
     public List<GameObject> PickUpList; // Used by burn script for ball count
     [Header("References")]
     [SerializeReference] private GameObject PickUp;
+    [SerializeReference] private GameObject BluePickUp;
     [SerializeReference] private GameObject PickedUp;
+    [SerializeReference] private GameObject BluePickedUp;
     [SerializeReference] private GameObject CameraLookAt;
     [SerializeReference] private ParticleSystem GroundParticles;
     [SerializeReference] private GameObject scarf;
@@ -37,11 +39,13 @@ public class PlayerMovement : MonoBehaviour
         MoveX = Input.GetAxis("Horizontal") * moveSpeed;
         MoveY = Input.GetAxis("Vertical");
 
+
         if ((rb.velocity.x >= 1 || rb.velocity.x <= -1) && isGrounded && !sfxRoll.isPlaying) sfxRoll.Play();
         else if (rb.velocity.x < 1 && rb.velocity.x > -1 || !isGrounded) sfxRoll.Stop();
 
         if (MoveX > 0) sr.flipX = false;
         else if (MoveX < 0) sr.flipX = true;
+
 
         if (Input.GetKeyDown(KeyCode.W) && (isGrounded || PickUpList.Count >= 1)) //check if you can jump
         {
@@ -73,7 +77,7 @@ public class PlayerMovement : MonoBehaviour
         {
             if (hit.collider.CompareTag("Ground"))
             {
-                if(!isGrounded) Instantiate(GroundParticles, new Vector2(transform.position.x, transform.position.y - PickUpList.Count), Quaternion.identity);
+                if (!isGrounded) Instantiate(GroundParticles, new Vector2(transform.position.x, transform.position.y - PickUpList.Count), Quaternion.identity);
                 isGrounded = true;
             }
             else
@@ -86,23 +90,26 @@ public class PlayerMovement : MonoBehaviour
             isGrounded = false;
         }
 
-        if(-moveSpeed < rb.velocity.x && rb.velocity.x < moveSpeed)
+        if (-moveSpeed < rb.velocity.x && rb.velocity.x < moveSpeed)
         {
-            rb.AddForce(new Vector2(MoveX/accelSlowdown, 0));
+            rb.AddForce(new Vector2(MoveX / accelSlowdown, 0));
         }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("PickUp") && PickUpList.Count <= ballsCanPickup && PickUpList.Count < 4)
+        bool isBlue = collision.gameObject.CompareTag("BluePickUp");
+
+        if (collision.gameObject.CompareTag("PickUp") || isBlue && PickUpList.Count <= ballsCanPickup && PickUpList.Count < 4)
         {
-            if(collision.gameObject.GetComponent<PickUp>().cooldownDone)
+            if (collision.gameObject.GetComponent<PickUp>().cooldownDone)
             {
                 Destroy(collision.gameObject); //romove loose ball
-                PickUpList.Add(Instantiate(PickedUp, new Vector2(gameObject.transform.position.x, gameObject.transform.position.y - gameObject.transform.localScale.y * (PickUpList.Count + 1)), Quaternion.identity, gameObject.transform)); //instantiate snowball beneath player
+                PickUpList.Add(Instantiate((isBlue) ? BluePickedUp : PickedUp, new Vector2(gameObject.transform.position.x, gameObject.transform.position.y - gameObject.transform.localScale.y * (PickUpList.Count + 1)), Quaternion.identity, gameObject.transform)); //instantiate snowball beneath player
                 scarf.SetActive(true);
 
                 // Fix collider and move player up                                                                                                                                                                                                                         // PickUpList[PickUpList.Count-1].tag = "PickedUp"; //add tag (just to be sure)
+                gameObject.transform.position = new Vector2(gameObject.transform.position.x, gameObject.transform.position.y + gameObject.transform.localScale.y); //moves player up
                 gameObject.transform.position = new Vector2(gameObject.transform.position.x, gameObject.transform.position.y + gameObject.transform.localScale.y); //moves player up
                 cc.offset = new Vector2(cc.offset.x, cc.offset.y - .5f); //changes offset so we don't bug into the ground
                 cc.size = new Vector2(cc.size.x, cc.size.y + 1); //changes size so we don't bug into the ground
@@ -114,15 +121,20 @@ public class PlayerMovement : MonoBehaviour
 
     public bool RemoveBall(bool cooldown)
     {
-        if(PickUpList.Count != 0)
+        if (PickUpList.Count != 0)
         {
+            bool isBlue = PickUpList[PickUpList.Count - 1].CompareTag("BluePickedUp");
             Destroy(PickUpList[PickUpList.Count - 1]); //destroys gameobject
             PickUpList.RemoveAt(PickUpList.Count - 1); //also remove it from list (for consistency sake
 
             cc.offset = new Vector2(cc.offset.x, cc.offset.y + .5f); //undo offset so we don't float
             cc.size = new Vector2(cc.size.x, cc.size.y - 1); //undo size so we don't float
 
-            GameObject NewPickUp = Instantiate(PickUp, new Vector2(gameObject.transform.position.x, gameObject.transform.position.y - gameObject.transform.localScale.y * (PickUpList.Count + 1)-0.1f), Quaternion.identity);
+            if (isBlue) return true;
+
+            Vector2 NewPickUpPos = new Vector2(gameObject.transform.position.x, gameObject.transform.position.y - gameObject.transform.localScale.y * (PickUpList.Count + 1) - 0.1f);
+
+            GameObject NewPickUp = Instantiate(PickUp, NewPickUpPos, Quaternion.identity);
             NewPickUp.GetComponent<PickUp>().Spawned(cooldown, rb.velocity.x); //spawn new ball
 
             CameraLookAt.transform.position = new Vector2(CameraLookAt.transform.position.x, CameraLookAt.transform.position.y + gameObject.transform.localScale.y / 2);//moves camera look at
