@@ -12,6 +12,7 @@ public class Level_Finisher : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player")) // When the player enters the trigger calls the Level_Loader funciton in the game manager
         {
+            collision.gameObject.SetActive(false);
             sr.sprite = CabinLit;
             Level_Manager.Level_Loader(SceneManager.GetActiveScene().buildIndex + 1);
         }
