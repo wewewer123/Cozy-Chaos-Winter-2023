@@ -6,10 +6,10 @@ public class PickUp : MonoBehaviour
 {
     [SerializeField] private float cooldown = 5f;
     public bool cooldownDone = true;
-    public void Spawned(bool CoolDown)
+    public void Spawned(bool CoolDown, float XForce)
     {
         cooldownDone = false;
-        gameObject.GetComponent<Rigidbody2D>().AddForce(new Vector2(Random.Range(-250, 250), Random.Range(-250, 0)));
+        gameObject.GetComponent<Rigidbody2D>().AddForce(new Vector2(XForce * 5, Random.Range(-250, 0)));
         if (CoolDown)
         {
             StartCoroutine(waitTime());
