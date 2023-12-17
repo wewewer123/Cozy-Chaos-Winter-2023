@@ -53,7 +53,7 @@ public class PlayerMovement : MonoBehaviour
             if (!isGrounded) RemoveBall(false);
         }
 
-        if ((Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) && !isGrounded) rb.AddForce(new Vector2(0f, MoveY), ForceMode2D.Impulse); //go down
+        if ((Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) && !isGrounded) rb.AddForce(new Vector2(0f, MoveY * 0.1f), ForceMode2D.Impulse); //go down
     }
 
     private void FixedUpdate()
@@ -100,7 +100,7 @@ public class PlayerMovement : MonoBehaviour
     {
         bool isBlue = collision.gameObject.CompareTag("BluePickUp");
 
-        if (collision.gameObject.CompareTag("PickUp") || isBlue && PickUpList.Count <= ballsCanPickup && PickUpList.Count < 4)
+        if ((collision.gameObject.CompareTag("PickUp") || isBlue) && PickUpList.Count <= ballsCanPickup && PickUpList.Count < 4)
         {
             if (collision.gameObject.GetComponent<PickUp>().cooldownDone)
             {
