@@ -22,7 +22,7 @@ public class Level_Manager : MonoBehaviour
     static public void Level_Loader(int level)  //You can pass the index number of a level to load it
     {
         if (level > SceneManager.sceneCountInBuildSettings - 1) return; // Change this to load game over screen
-        SceneManager.LoadScene(level);
+        SceneManager.LoadSceneAsync(level);
         Current_Level = level;
     }
     static public void Reset_Level() //When called the scene manager reloads the current scene
