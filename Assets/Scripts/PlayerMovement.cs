@@ -135,6 +135,7 @@ public class PlayerMovement : MonoBehaviour
             cc.offset = new Vector2(cc.offset.x, cc.offset.y + .5f); //undo offset so we don't float
             cc.size = new Vector2(cc.size.x, cc.size.y - 1); //undo size so we don't float
 
+            if (PickUpList.Count == 0) scarf.SetActive(false); //if no balls left, hide scarf
             if (isBlue) return true;
 
             Vector2 NewPickUpPos = new Vector2(gameObject.transform.position.x, gameObject.transform.position.y - gameObject.transform.localScale.y * (PickUpList.Count + 1) - 0.1f);
@@ -143,7 +144,6 @@ public class PlayerMovement : MonoBehaviour
             NewPickUp.GetComponent<PickUp>().Spawned(cooldown, rb.velocity.x); //spawn new ball
 
             CameraLookAt.transform.position = new Vector2(CameraLookAt.transform.position.x, CameraLookAt.transform.position.y + gameObject.transform.localScale.y / 2);//moves camera look at
-            if (PickUpList.Count == 0) scarf.SetActive(false); //if no balls left, hide scarf
             return true;
         }
         return false;
