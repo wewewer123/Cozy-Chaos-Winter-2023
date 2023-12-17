@@ -50,7 +50,7 @@ public class PlayerMovement : MonoBehaviour
 
         if ((Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.Space)) && (isGrounded || PickUpList.Count >= 1)) //check if you can jump
         {
-            if(sfxJump.isPlaying) sfxJump.Play();
+            if(!sfxJump.isPlaying) sfxJump.Play();
             rb.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
             if (!isGrounded) RemoveBall(false);
         }
@@ -79,8 +79,11 @@ public class PlayerMovement : MonoBehaviour
         {
             if (hit.collider.CompareTag("Ground"))
             {
-                if(sfxJump.isPlaying) sfxJump.Play();
-                if (!isGrounded) Instantiate(GroundParticles, new Vector2(transform.position.x, transform.position.y - PickUpList.Count), Quaternion.identity);
+                if (!isGrounded)
+                {
+                    if(!sfxJump.isPlaying) sfxJump.Play();
+                    Instantiate(GroundParticles, new Vector2(transform.position.x, transform.position.y - PickUpList.Count), Quaternion.identity);
+                }
                 isGrounded = true;
             }
             else
@@ -108,7 +111,7 @@ public class PlayerMovement : MonoBehaviour
             if (collision.gameObject.GetComponent<PickUp>().cooldownDone)
             {
                 Destroy(collision.gameObject); //romove loose ball
-                PickUpList.Add(Instantiate((isBlue) ? BluePickedUp : PickedUp, new Vector2(gameObject.transform.position.x, gameObject.transform.position.y - gameObject.transform.localScale.y * (PickUpList.Count + 1)), Quaternion.identity, gameObject.transform)); //instantiate snowball beneath player
+                PickUpList.Add(Instantiate(isBlue ? BluePickedUp : PickedUp, new Vector2(gameObject.transform.position.x, gameObject.transform.position.y - gameObject.transform.localScale.y * (PickUpList.Count + 1)), Quaternion.identity, gameObject.transform)); //instantiate snowball beneath player
                 scarf.SetActive(true);
 
                 // Fix collider and move player up                                                                                                                                                                                                                         // PickUpList[PickUpList.Count-1].tag = "PickedUp"; //add tag (just to be sure)
