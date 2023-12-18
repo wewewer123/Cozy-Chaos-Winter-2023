@@ -97,6 +97,7 @@ GameObject:
   - component: {fileID: 9075230126587504055}
   - component: {fileID: 1963463891119358713}
   - component: {fileID: 7823974746182303232}
+  - component: {fileID: 1244494710}
   m_Layer: 2
   m_Name: Fireplace
   m_TagString: Untagged
@@ -378,3 +379,21 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1244494710
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9075230126587504042}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19cefacf3e9e2174dbd05be1e2c27d5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  effect: {fileID: 0}
+  effectTransationTime: 1.2
+  intensityMinValue: 0.5
+  intensityMaxValue: 1.5
+  voronoiPowerMinValue: 0.8
+  voronoiPowerMaxValue: 3
