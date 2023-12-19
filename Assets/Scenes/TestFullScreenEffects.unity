@@ -358,6 +358,30 @@ PrefabInstance:
       propertyPath: m_Name
       value: Background
       objectReference: {fileID: 0}
+    - target: {fileID: 446858786467113798, guid: d519df8c29843eb42b0cb33521984b8f, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1357689113199296416, guid: d519df8c29843eb42b0cb33521984b8f, type: 3}
+      propertyPath: CollisionModule.enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1357689113199296416, guid: d519df8c29843eb42b0cb33521984b8f, type: 3}
+      propertyPath: CollisionModule.m_Dampen.scalar
+      value: 0.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1357689113199296416, guid: d519df8c29843eb42b0cb33521984b8f, type: 3}
+      propertyPath: CollisionModule.collisionMessages
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1357689113199296416, guid: d519df8c29843eb42b0cb33521984b8f, type: 3}
+      propertyPath: InitialModule.startLifetime.scalar
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 1357689113199296416, guid: d519df8c29843eb42b0cb33521984b8f, type: 3}
+      propertyPath: CollisionModule.m_EnergyLossOnCollision.scalar
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d519df8c29843eb42b0cb33521984b8f, type: 3}
 --- !u!1 &262672033
@@ -8303,7 +8327,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1569896092
 Transform:
   m_ObjectHideFlags: 0
