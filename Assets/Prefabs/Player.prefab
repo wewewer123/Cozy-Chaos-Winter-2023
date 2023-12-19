@@ -589,6 +589,7 @@ MonoBehaviour:
   jumpForce: 5
   moveSpeed: 6.5
   accelSlowdown: 0.75
+  jumpCooldown: 0.25
   PickUpList: []
   PickUp: {fileID: 2473912822316316176, guid: d38b025965a7f3b49ac6a7aefeeb8fbf, type: 3}
   BluePickUp: {fileID: 2473912822316316176, guid: db566e4ad2347ff49836db3bf894cfc4, type: 3}
