@@ -21,8 +21,10 @@ public class PlayerMovement : MonoBehaviour
     [SerializeReference] private GameObject scarf;
     [SerializeReference] AudioSource sfxRoll;
     [SerializeReference] AudioSource sfxJump;
+    [SerializeField] GroundCheck groundCheck;
+    [SerializeField] GroundCheck roofCheck;
     private bool isGrounded;
-    private int ballsCanPickup = 5;
+    private bool canPickupBalls = true;
     private Rigidbody2D rb;
     private SpriteRenderer sr;
     private CapsuleCollider2D cc;
@@ -60,53 +62,23 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        RaycastHit2D tophit = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y), Vector2.up, 5.0f); //raycast to check if there is a ceiling
-        RaycastHit2D hit = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y-(1*PickUpList.Count)), Vector2.down, 1.00025f-0.40f); //raycast to check if grounded
+        canPickupBalls = !roofCheck.isGrounded; // If roofCheck is touching the ground, you can't pickup balls, otherwise you can
 
-        if (tophit.collider != null)
+        if (!isGrounded && groundCheck.isGrounded)
         {
-            if (tophit.collider.CompareTag("Ground"))
-            {
-                ballsCanPickup = Mathf.FloorToInt(tophit.distance);
-            }
+            if(!sfxJump.isPlaying) sfxJump.Play();
+            Instantiate(GroundParticles, new Vector2(transform.position.x, transform.position.y - PickUpList.Count), Quaternion.identity);
         }
-        else
-        {
-            ballsCanPickup = 4;
-        }
+        isGrounded = groundCheck.isGrounded;
 
-        if (hit.collider != null)
-        {
-            if (hit.collider.CompareTag("Ground"))
-            {
-                if (!isGrounded)
-                {
-                    if(!sfxJump.isPlaying) sfxJump.Play();
-                    Instantiate(GroundParticles, new Vector2(transform.position.x, transform.position.y - PickUpList.Count), Quaternion.identity);
-                }
-                isGrounded = true;
-            }
-            else
-            {
-                isGrounded = false;
-            }
-        }
-        else
-        {
-            isGrounded = false;
-        }
-
-        if (-moveSpeed < rb.velocity.x && rb.velocity.x < moveSpeed)
-        {
-            rb.AddForce(new Vector2(MoveX / accelSlowdown, 0));
-        }
+        if (-moveSpeed < rb.velocity.x && rb.velocity.x < moveSpeed) rb.AddForce(new Vector2(MoveX / accelSlowdown, 0));
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         bool isBlue = collision.gameObject.CompareTag("BluePickUp");
 
-        if ((collision.gameObject.CompareTag("PickUp") || isBlue) && PickUpList.Count <= ballsCanPickup && PickUpList.Count < 4)
+        if ((collision.gameObject.CompareTag("PickUp") || isBlue) && canPickupBalls)
         {
             if (collision.gameObject.GetComponent<PickUp>().cooldownDone)
             {
@@ -118,8 +90,10 @@ public class PlayerMovement : MonoBehaviour
                 gameObject.transform.position = new Vector2(gameObject.transform.position.x, gameObject.transform.position.y + gameObject.transform.localScale.y); //moves player up
                 cc.offset = new Vector2(cc.offset.x, cc.offset.y - .5f); //changes offset so we don't bug into the ground
                 cc.size = new Vector2(cc.size.x, cc.size.y + 1); //changes size so we don't bug into the ground
-
-                CameraLookAt.transform.position = new Vector2(CameraLookAt.transform.position.x, CameraLookAt.transform.position.y - gameObject.transform.localScale.y / 2); //moves camera look at
+                //moves camera focus
+                CameraLookAt.transform.position = new Vector2(CameraLookAt.transform.position.x, CameraLookAt.transform.position.y - gameObject.transform.localScale.y / 2);
+                //moves groundcheck down
+                groundCheck.transform.position = new Vector2(groundCheck.transform.position.x, groundCheck.transform.position.y - gameObject.transform.localScale.y);
             }
         }
     }
@@ -134,6 +108,8 @@ public class PlayerMovement : MonoBehaviour
 
             cc.offset = new Vector2(cc.offset.x, cc.offset.y + .5f); //undo offset so we don't float
             cc.size = new Vector2(cc.size.x, cc.size.y - 1); //undo size so we don't float
+            // moves groundcheck back up
+            groundCheck.transform.position = new Vector2(groundCheck.transform.position.x, groundCheck.transform.position.y + gameObject.transform.localScale.y);
 
             if (PickUpList.Count == 0) scarf.SetActive(false); //if no balls left, hide scarf
             if (isBlue) return true;
