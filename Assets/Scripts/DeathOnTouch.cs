@@ -6,7 +6,7 @@ public class DeathOnTouch : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player")) // When the player enters the trigger calls the Level_Loader funciton in the game manager
         {
-            Level_Manager.Reset_Level();
+            LevelManager.ResetLevel(true);
         }
     }
 }

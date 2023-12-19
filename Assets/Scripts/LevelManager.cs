@@ -1,10 +1,10 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-public class Level_Manager : MonoBehaviour
+public class LevelManager : MonoBehaviour
 {
-    private static Level_Manager _current;
-    public static Level_Manager current { get => _current; }
+    private static LevelManager _current;
+    public static LevelManager current { get => _current; }
     public static int Current_Level = 0;
     [SerializeField] GameObject deathMenu;
     [SerializeField] GameObject pauseMenu;
@@ -30,22 +30,22 @@ public class Level_Manager : MonoBehaviour
             }
         }
     }
-    static public void Level_Loader(int level)  //You can pass the index number of a level to load it
+    static public void LoadLevel(int level)  //You can pass the index number of a level to load it
     {
         if (level > SceneManager.sceneCountInBuildSettings - 1) return; // Change this to load game over screen
         SceneManager.LoadSceneAsync(level);
         Current_Level = level;
     }
-    private IEnumerator DeathMenu()
+    private IEnumerator ReloadLevel(bool death)
     {
-        deathMenu.SetActive(true);
+        if (death) deathMenu.SetActive(true);
         yield return new WaitForSeconds(1.0f);
         SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
         yield return new WaitForSeconds(1.0f);
-        deathMenu.SetActive(false);
+        if (death) deathMenu.SetActive(false);
     }
-    static public void Reset_Level() //When called the scene manager reloads the current scene
+    static public void ResetLevel(bool death) //When called the scene manager reloads the current scene with death menu
     {
-        _current.StartCoroutine(current.DeathMenu());
+        _current.StartCoroutine(current.ReloadLevel(death));
     }
 }
