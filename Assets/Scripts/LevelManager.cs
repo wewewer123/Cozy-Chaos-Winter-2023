@@ -22,7 +22,7 @@ public class LevelManager : MonoBehaviour
         }
     }
     private void Update() {
-        if (Input.GetKeyDown(KeyCode.P) && SceneManager.GetActiveScene().buildIndex != 0) {
+        if ((Input.GetKeyDown(KeyCode.P) || Input.GetKeyDown(KeyCode.Escape )) && SceneManager.GetActiveScene().buildIndex != 0) {
             if (pauseMenu.activeSelf) {
                 pauseMenu.SetActive(false);
             } else {
