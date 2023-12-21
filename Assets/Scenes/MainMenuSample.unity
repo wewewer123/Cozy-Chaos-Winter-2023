@@ -2018,6 +2018,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3294593320943720452, guid: c8e934a674d27754a869d08d8c0c4922, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: LoadLevel
+      objectReference: {fileID: 0}
+    - target: {fileID: 3294593320943720452, guid: c8e934a674d27754a869d08d8c0c4922, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: LevelManager, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 9020804178718508741, guid: c8e934a674d27754a869d08d8c0c4922, type: 3}
       propertyPath: m_RootOrder
       value: 9
