@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-public class Level_Finisher : MonoBehaviour
+public class LevelFinisher : MonoBehaviour
 {
     [SerializeField] Sprite CabinLit; // Reference to the lit cabin sprite
     private SpriteRenderer sr;
@@ -14,7 +14,7 @@ public class Level_Finisher : MonoBehaviour
         {
             collision.gameObject.SetActive(false);
             sr.sprite = CabinLit;
-            Level_Manager.Level_Loader(SceneManager.GetActiveScene().buildIndex + 1);
+            LevelManager.LoadLevel(SceneManager.GetActiveScene().buildIndex + 1);
         }
     }
 }

@@ -1,7 +1,5 @@
-using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class Burn : MonoBehaviour
 {
@@ -23,7 +21,7 @@ public class Burn : MonoBehaviour
 
         // If player has no balls left, stop burning
         yield return new WaitForSeconds(timeInterval);
-        if (playerMovement.PickUpList.Count == 0) SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        if (playerMovement.PickUpList.Count == 0) LevelManager.ResetLevel(true);
         else StartCoroutine(BurnTimer());
     }
 
