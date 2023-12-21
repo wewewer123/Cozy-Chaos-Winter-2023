@@ -23,8 +23,18 @@ public class FireDamageIndicator : MonoBehaviour
 
     private void Awake()
     {
-        effect = GameObject.Find(effectName);
+        effect = Camera.main.transform.Find(effectName).gameObject;
+        if (effect == null)
+        {
+            Debug.LogError("FireDamageIndicator: effect not found should be added under the main camera! Please get it from another level scene.");
+            Destroy(gameObject); // Destroying the whole object to make sure whatever dummy is making this level is aware of the issue
+        }
         _effectMaterial = effect.GetComponent<SpriteRenderer>().material;
+        if (_effectMaterial == null)
+        {
+            Debug.LogError("FireDamageIndicator: effect material not found! Please readd it from another level scene.");
+            Destroy(gameObject); // Destroying the whole object to make sure whatever dummy is making this level is aware of the issue
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -48,7 +58,6 @@ public class FireDamageIndicator : MonoBehaviour
             effect.SetActive(false);
             _effectMaterial.DOFloat(intensityMaxValue, intensityCached, effectTransationTime);
             _effectMaterial.DOFloat(voronoiPowerMaxValue, voronoiPowerCached, effectTransationTime);
-
         }
     }
 }

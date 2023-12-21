@@ -21,6 +21,12 @@ public class Burn : MonoBehaviour
 
         // If player has no balls left, stop burning
         yield return new WaitForSeconds(timeInterval);
+        if (LevelManager.current == null)
+        {
+            Debug.LogWarning("Player died, but no LevelManager was found! Start from main menu to get level manager.");
+
+            yield break;
+        }
         if (playerMovement.PickUpList.Count == 0) LevelManager.ResetLevel(true);
         else StartCoroutine(BurnTimer());
     }
