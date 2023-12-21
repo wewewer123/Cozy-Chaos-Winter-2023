@@ -22,12 +22,16 @@ public class LevelManager : MonoBehaviour
         }
     }
     private void Update() {
-        if (Input.GetKeyDown(KeyCode.P) && SceneManager.GetActiveScene().buildIndex != 0) {
+        if ((Input.GetKeyDown(KeyCode.P) || Input.GetKeyDown(KeyCode.Escape)) && SceneManager.GetActiveScene().buildIndex != 0) {
             if (pauseMenu.activeSelf) {
                 pauseMenu.SetActive(false);
             } else {
                 pauseMenu.SetActive(true);
             }
+        }
+
+        if (Input.GetKeyDown(KeyCode.R) && SceneManager.GetActiveScene().buildIndex != 0) {
+            ResetLevel(false);
         }
     }
     static public void LoadLevel(int level)  //You can pass the index number of a level to load it
@@ -36,16 +40,17 @@ public class LevelManager : MonoBehaviour
         SceneManager.LoadSceneAsync(level);
         Current_Level = level;
     }
-    private IEnumerator ReloadLevel(bool death)
+    private IEnumerator ReloadLevel()
     {
-        if (death) deathMenu.SetActive(true);
+        deathMenu.SetActive(true);
         yield return new WaitForSeconds(1.0f);
         SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
         yield return new WaitForSeconds(1.0f);
-        if (death) deathMenu.SetActive(false);
+        deathMenu.SetActive(false);
     }
     static public void ResetLevel(bool death) //When called the scene manager reloads the current scene with death menu
     {
-        _current.StartCoroutine(current.ReloadLevel(death));
+        if (death) _current.StartCoroutine(current.ReloadLevel());
+        else SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }
