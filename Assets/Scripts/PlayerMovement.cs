@@ -29,8 +29,8 @@ public class PlayerMovement : MonoBehaviour
 
     // Collision
     [SerializeField] private LayerMask groundLayer;
-    private Collider2D groundCheck;
-    private Collider2D roofCheck;
+    private bool groundCheck;
+    private bool roofCheck;
 
     // Components
     private Rigidbody2D rb;
@@ -161,8 +161,8 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate()
     {
         // Check for collisions
-        groundCheck = Physics2D.OverlapBox(transform.position + Vector3.down * (PickUpList.Count + 0.25f), new Vector3(0.9f, 0.5f, 1), 0, groundLayer);
-        roofCheck = Physics2D.OverlapCircle(transform.position + Vector3.up, 0.5f, 0, groundLayer);
+        groundCheck = null != Physics2D.OverlapBox(transform.position + Vector3.down * (PickUpList.Count + 0.25f), new Vector3(0.9f, 0.5f, 1), 0, groundLayer);
+        roofCheck = null != Physics2D.OverlapBox(transform.position + Vector3.up, Vector3.one, 0, groundLayer);
 
         if (!isGrounded && groundCheck) // If we just landed on the ground, play the landing sound and spawn particles
         {
@@ -182,7 +182,8 @@ public class PlayerMovement : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         bool isBlue = collision.gameObject.CompareTag("BluePickUp");
-
+        Debug.Log(roofCheck);
+        Debug.Log(groundCheck);
         if ((collision.gameObject.CompareTag("PickUp") || isBlue) && !roofCheck)
         {
             if (collision.gameObject.GetComponent<PickUp>().cooldownDone)
@@ -210,6 +211,6 @@ public class PlayerMovement : MonoBehaviour
     {
         Gizmos.color = Color.green;
         Gizmos.DrawWireCube(transform.position + Vector3.down * (PickUpList.Count + 0.25f), new Vector3(0.9f, 0.5f, 1));
-        Gizmos.DrawWireSphere(transform.position + Vector3.up, 0.5f);
+        Gizmos.DrawWireCube(transform.position + Vector3.up, Vector3.one);
     }
 }
