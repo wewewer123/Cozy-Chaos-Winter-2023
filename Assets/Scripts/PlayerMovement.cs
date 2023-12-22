@@ -182,8 +182,6 @@ public class PlayerMovement : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         bool isBlue = collision.gameObject.CompareTag("BluePickUp");
-        Debug.Log(roofCheck);
-        Debug.Log(groundCheck);
         if ((collision.gameObject.CompareTag("PickUp") || isBlue) && !roofCheck)
         {
             if (collision.gameObject.GetComponent<PickUp>().cooldownDone)
