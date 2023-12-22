@@ -14,7 +14,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float jumpForce = 5f;
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float accelSlowdown = 3.5f;
-    public List<GameObject> PickUpList; // Used by burn script for ball count
+    public List<GameObject> PickUpList; // Used for ball count
     [Header("References")]
     [SerializeReference] private GameObject PickUp;
     [SerializeReference] private GameObject BluePickUp;
@@ -26,8 +26,13 @@ public class PlayerMovement : MonoBehaviour
     [SerializeReference] private GameObject hat;
     [SerializeReference] AudioSource sfxRoll;
     [SerializeReference] AudioSource sfxJump;
-    [SerializeField] GroundCheck groundCheck;
-    [SerializeField] GroundCheck roofCheck;
+
+    // Collision
+    [SerializeField] private LayerMask groundLayer;
+    private Collider2D groundCheck;
+    private Collider2D roofCheck;
+
+    // Components
     private Rigidbody2D rb;
     private SpriteRenderer sr;
     private SpriteRenderer srScarf;
@@ -68,7 +73,6 @@ public class PlayerMovement : MonoBehaviour
         scarf.SetActive(true);
         hat.SetActive(true);
     }
-    private bool canPickupBalls() => !roofCheck.isGrounded;
     public void RemoveBall(bool cooldown)
     {
         if (PickUpList.Count == 0)
@@ -81,9 +85,6 @@ public class PlayerMovement : MonoBehaviour
         // Capsule collider align
         cc.offset = new Vector2(cc.offset.x, cc.offset.y + .5f);
         cc.size = new Vector2(cc.size.x, cc.size.y - 1);
-
-        // moves groundcheck back up
-        groundCheck.transform.position = new Vector2(groundCheck.transform.position.x, groundCheck.transform.position.y + gameObject.transform.localScale.y);
 
         //if no balls left, hide scarf and hat
         if (PickUpList.Count == 0)
@@ -159,16 +160,22 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!isGrounded && groundCheck.isGrounded) // If we just landed on the ground, play the landing sound and spawn particles
+        // Check for collisions
+        groundCheck = Physics2D.OverlapBox(transform.position + Vector3.down * (PickUpList.Count + 0.25f), new Vector3(0.9f, 0.5f, 1), 0, groundLayer);
+        roofCheck = Physics2D.OverlapCircle(transform.position + Vector3.up, 0.5f, 0, groundLayer);
+
+        if (!isGrounded && groundCheck) // If we just landed on the ground, play the landing sound and spawn particles
         {
             PlaySFX(sfxJump);
             Instantiate(GroundParticles, new Vector2(transform.position.x, transform.position.y - PickUpList.Count), Quaternion.identity);
         }
-        isGrounded = groundCheck.isGrounded; // Update grounded status
+        isGrounded = groundCheck; // Update grounded status
 
-        if (MoveY < 0 && !isGrounded) rb.AddForce(new Vector2(0f, MoveY), ForceMode2D.Impulse); // Down to fall
+        if (MoveY < 0 && !isGrounded)
+            rb.AddForce(new Vector2(0f, MoveY), ForceMode2D.Impulse); // Down to fall
 
-        if (-moveSpeed < rb.velocity.x && rb.velocity.x < moveSpeed) rb.AddForce(new Vector2(MoveX / accelSlowdown, 0));
+        if(Mathf.Abs(rb.velocity.x) < moveSpeed)
+            rb.AddForce(new Vector2(MoveX / accelSlowdown, 0));
     }
 
     // --- Collisions ---
@@ -176,23 +183,33 @@ public class PlayerMovement : MonoBehaviour
     {
         bool isBlue = collision.gameObject.CompareTag("BluePickUp");
 
-        if ((collision.gameObject.CompareTag("PickUp") || isBlue) && canPickupBalls())
+        if ((collision.gameObject.CompareTag("PickUp") || isBlue) && !roofCheck)
         {
             if (collision.gameObject.GetComponent<PickUp>().cooldownDone)
             {
+                // Remove ball
                 Destroy(collision.gameObject); //romove loose ball
                 PickUpList.Add(Instantiate(isBlue ? BluePickedUp : PickedUp, new Vector2(gameObject.transform.position.x, gameObject.transform.position.y - gameObject.transform.localScale.y * (PickUpList.Count + 1)), Quaternion.identity, gameObject.transform)); //instantiate snowball beneath player
+                
+                // Update appearance
                 SetDress(true);
 
                 // Fix collider and move player up                                                                                                                                                                                                                         // PickUpList[PickUpList.Count-1].tag = "PickedUp"; //add tag (just to be sure)
                 gameObject.transform.position = new Vector2(gameObject.transform.position.x, gameObject.transform.position.y + gameObject.transform.localScale.y); //moves player up
                 cc.offset = new Vector2(cc.offset.x, cc.offset.y - .5f); //changes offset so we don't bug into the ground
                 cc.size = new Vector2(cc.size.x, cc.size.y + 1); //changes size so we don't bug into the ground
+
                 //moves camera focus
                 CameraLookAt.transform.position = new Vector2(CameraLookAt.transform.position.x, CameraLookAt.transform.position.y - gameObject.transform.localScale.y / 2);
-                //moves groundcheck down
-                groundCheck.transform.position = new Vector2(groundCheck.transform.position.x, groundCheck.transform.position.y - gameObject.transform.localScale.y);
             }
         }
+    }
+
+    // Gizmos for collider visualization
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireCube(transform.position + Vector3.down * (PickUpList.Count + 0.25f), new Vector3(0.9f, 0.5f, 1));
+        Gizmos.DrawWireSphere(transform.position + Vector3.up, 0.5f);
     }
 }
