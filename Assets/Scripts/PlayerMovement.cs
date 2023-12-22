@@ -6,7 +6,6 @@ public class PlayerMovement : MonoBehaviour
 {
     private float MoveX;
     private float MoveY;
-    private bool OnJumpCooldown;
     private bool isGrounded;
     public float targetWarmth = 0;
     private float currentWarmth = 0;
@@ -15,7 +14,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float jumpForce = 5f;
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float accelSlowdown = 3.5f;
-    [SerializeField] private float jumpCooldown = 0.25f;
     public List<GameObject> PickUpList; // Used by burn script for ball count
     [Header("References")]
     [SerializeReference] private GameObject PickUp;
@@ -45,22 +43,85 @@ public class PlayerMovement : MonoBehaviour
         anim = GetComponent<Animator>();
     }
 
-    private IEnumerator JumpCooldown()
+    // --- Useful functions to avoid repetition ---
+    void Jump()
     {
-        yield return new WaitForSeconds(jumpCooldown);
-        OnJumpCooldown = false;
+        PlaySFX(sfxJump);
+        rb.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
+    }
+    /// <summary>
+    /// Play SFX with a slight pitch offset
+    /// </summary>
+    void PlaySFX(AudioSource sfx)
+    {
+        if (!sfx.isPlaying)
+        {
+            sfx.pitch = Random.Range(0.9f, 1.1f);
+            sfx.Play();
+        }
+    }
+    /// <summary>
+    /// Show/Hide Scarf and Hat
+    /// </summary>
+    void SetDress(bool active)
+    {
+        scarf.SetActive(true);
+        hat.SetActive(true);
+    }
+    private bool canPickupBalls() => !roofCheck.isGrounded;
+    public void RemoveBall(bool cooldown)
+    {
+        if (PickUpList.Count == 0)
+            return;
+
+        bool isBlue = PickUpList[PickUpList.Count - 1].CompareTag("BluePickedUp");
+        Destroy(PickUpList[PickUpList.Count - 1]); //destroys gameobject
+        PickUpList.RemoveAt(PickUpList.Count - 1); //also remove it from list (avoid null references)
+
+        // Capsule collider align
+        cc.offset = new Vector2(cc.offset.x, cc.offset.y + .5f);
+        cc.size = new Vector2(cc.size.x, cc.size.y - 1);
+
+        // moves groundcheck back up
+        groundCheck.transform.position = new Vector2(groundCheck.transform.position.x, groundCheck.transform.position.y + gameObject.transform.localScale.y);
+
+        //if no balls left, hide scarf and hat
+        if (PickUpList.Count == 0)
+        {
+            scarf.SetActive(false);
+            hat.SetActive(false);
+        }
+
+        // Blue balls don't drop back as a pickup
+        if (isBlue)
+            return;
+
+        // Drop pickup
+        Vector2 NewPickUpPos = new Vector2(gameObject.transform.position.x, gameObject.transform.position.y - gameObject.transform.localScale.y * (PickUpList.Count + 1) - 0.1f);
+
+        GameObject NewPickUp = Instantiate(PickUp, NewPickUpPos, Quaternion.identity);
+        NewPickUp.GetComponent<PickUp>().Spawned(cooldown, rb.velocity.x); //spawn new ball
+
+        CameraLookAt.transform.position = new Vector2(CameraLookAt.transform.position.x, CameraLookAt.transform.position.y + gameObject.transform.localScale.y / 2);//moves camera look at
     }
 
+    // --- Game loop ---
     private void Update()
     {
-        currentWarmth = Mathf.Lerp(targetWarmth, currentWarmth, .1f); // Smoothly lerps the target warmth to the current warmth
+        // Smoothly lerps the target warmth to the current warmth
+        currentWarmth = Mathf.Lerp(targetWarmth, currentWarmth, .1f); 
+        
         // Gets momentum and moves it
         MoveX = Input.GetAxis("Horizontal") * moveSpeed;
         MoveY = Input.GetAxis("Vertical");
 
-        if ((rb.velocity.x >= 1 || rb.velocity.x <= -1) && isGrounded && !sfxRoll.isPlaying) sfxRoll.Play();
-        else if (rb.velocity.x < 1 && rb.velocity.x > -1 || !isGrounded) sfxRoll.Stop();
+        // Play rolling sfx
+        if(isGrounded && !sfxRoll.isPlaying && Mathf.Abs(rb.velocity.x) > 1)
+            sfxRoll.Play();
+        else
+            sfxRoll.Stop();
 
+        // Melting animations
         if (currentWarmth > 0)
         {
             anim.speed = currentWarmth * .25f;
@@ -72,26 +133,27 @@ public class PlayerMovement : MonoBehaviour
             anim.SetBool("Melting", false);
         }
 
-        if (MoveX >= 1 || MoveX <= -1) anim.SetBool("Rolling", PickUpList.Count == 0);
-        else anim.SetBool("Rolling", false);
+        // Movement animations
+        anim.SetBool("Rolling", PickUpList.Count == 0 && MoveX != 0);
 
-        if (MoveX > 0) { sr.flipX = false; srScarf.flipX = false; }
-        else if (MoveX < 0) { sr.flipX = true; srScarf.flipX = true; }
-
-        // Grounded jump holding
-        if (Input.GetButton("Jump") && isGrounded && !OnJumpCooldown)
+        // Flip sprites
+        if (MoveX != 0)
         {
-            OnJumpCooldown = true;
-            StartCoroutine(JumpCooldown());
-            if(!sfxJump.isPlaying) sfxJump.Play();
-            rb.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
+            sr.flipX = MoveX < 0;
+            srScarf.flipX = sr.flipX;
         }
 
-        if (Input.GetButtonDown("Jump") && !isGrounded && PickUpList.Count > 0) // Jumping while in the air with balls
+        // Grounded jump holding
+        if (Input.GetButton("Jump") && isGrounded && rb.velocity.y < 0.5f)
         {
-            if(!sfxJump.isPlaying) sfxJump.Play();
+            Jump();
+        }
+
+        // Jumping while in the air with balls
+        if (Input.GetButtonDown("Jump") && !isGrounded && PickUpList.Count > 0) 
+        {
             RemoveBall(false);
-            rb.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
+            Jump();
         }
     }
 
@@ -99,7 +161,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (!isGrounded && groundCheck.isGrounded) // If we just landed on the ground, play the landing sound and spawn particles
         {
-            if(!sfxJump.isPlaying) sfxJump.Play();
+            PlaySFX(sfxJump);
             Instantiate(GroundParticles, new Vector2(transform.position.x, transform.position.y - PickUpList.Count), Quaternion.identity);
         }
         isGrounded = groundCheck.isGrounded; // Update grounded status
@@ -109,8 +171,7 @@ public class PlayerMovement : MonoBehaviour
         if (-moveSpeed < rb.velocity.x && rb.velocity.x < moveSpeed) rb.AddForce(new Vector2(MoveX / accelSlowdown, 0));
     }
 
-    private bool canPickupBalls() => !roofCheck.isGrounded;
-
+    // --- Collisions ---
     private void OnCollisionEnter2D(Collision2D collision)
     {
         bool isBlue = collision.gameObject.CompareTag("BluePickUp");
@@ -121,8 +182,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 Destroy(collision.gameObject); //romove loose ball
                 PickUpList.Add(Instantiate(isBlue ? BluePickedUp : PickedUp, new Vector2(gameObject.transform.position.x, gameObject.transform.position.y - gameObject.transform.localScale.y * (PickUpList.Count + 1)), Quaternion.identity, gameObject.transform)); //instantiate snowball beneath player
-                scarf.SetActive(true);
-                hat.SetActive(true);
+                SetDress(true);
 
                 // Fix collider and move player up                                                                                                                                                                                                                         // PickUpList[PickUpList.Count-1].tag = "PickedUp"; //add tag (just to be sure)
                 gameObject.transform.position = new Vector2(gameObject.transform.position.x, gameObject.transform.position.y + gameObject.transform.localScale.y); //moves player up
@@ -134,32 +194,5 @@ public class PlayerMovement : MonoBehaviour
                 groundCheck.transform.position = new Vector2(groundCheck.transform.position.x, groundCheck.transform.position.y - gameObject.transform.localScale.y);
             }
         }
-    }
-
-    public bool RemoveBall(bool cooldown)
-    {
-        if (PickUpList.Count != 0)
-        {
-            bool isBlue = PickUpList[PickUpList.Count - 1].CompareTag("BluePickedUp");
-            Destroy(PickUpList[PickUpList.Count - 1]); //destroys gameobject
-            PickUpList.RemoveAt(PickUpList.Count - 1); //also remove it from list (for consistency sake
-
-            cc.offset = new Vector2(cc.offset.x, cc.offset.y + .5f); //undo offset so we don't float
-            cc.size = new Vector2(cc.size.x, cc.size.y - 1); //undo size so we don't float
-            // moves groundcheck back up
-            groundCheck.transform.position = new Vector2(groundCheck.transform.position.x, groundCheck.transform.position.y + gameObject.transform.localScale.y);
-
-            if (PickUpList.Count == 0) { scarf.SetActive(false); hat.SetActive(false); } //if no balls left, hide scarf and hat
-            if (isBlue) return true; // Blue balls don't drop back as a pickup
-
-            Vector2 NewPickUpPos = new Vector2(gameObject.transform.position.x, gameObject.transform.position.y - gameObject.transform.localScale.y * (PickUpList.Count + 1) - 0.1f);
-
-            GameObject NewPickUp = Instantiate(PickUp, NewPickUpPos, Quaternion.identity);
-            NewPickUp.GetComponent<PickUp>().Spawned(cooldown, rb.velocity.x); //spawn new ball
-
-            CameraLookAt.transform.position = new Vector2(CameraLookAt.transform.position.x, CameraLookAt.transform.position.y + gameObject.transform.localScale.y / 2);//moves camera look at
-            return true;
-        }
-        return false;
     }
 }
