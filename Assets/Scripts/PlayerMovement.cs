@@ -8,6 +8,8 @@ public class PlayerMovement : MonoBehaviour
     private float MoveY;
     private bool OnJumpCooldown;
     private bool isGrounded;
+    public float targetWarmth = 0;
+    private float currentWarmth = 0;
 
     [Header("Movement")]
     [SerializeField] private float jumpForce = 5f;
@@ -23,6 +25,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeReference] private GameObject CameraLookAt;
     [SerializeReference] private ParticleSystem GroundParticles;
     [SerializeReference] private GameObject scarf;
+    [SerializeReference] private GameObject hat;
     [SerializeReference] AudioSource sfxRoll;
     [SerializeReference] AudioSource sfxJump;
     [SerializeField] GroundCheck groundCheck;
@@ -30,12 +33,14 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody2D rb;
     private SpriteRenderer sr;
     private CapsuleCollider2D cc;
+    private Animator anim;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
         cc = GetComponent<CapsuleCollider2D>();
+        anim = GetComponent<Animator>();
     }
 
     private IEnumerator JumpCooldown()
@@ -46,12 +51,27 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        currentWarmth = Mathf.Lerp(targetWarmth, currentWarmth, .1f); // Smoothly lerps the target warmth to the current warmth
         // Gets momentum and moves it
         MoveX = Input.GetAxis("Horizontal") * moveSpeed;
         MoveY = Input.GetAxis("Vertical");
 
         if ((rb.velocity.x >= 1 || rb.velocity.x <= -1) && isGrounded && !sfxRoll.isPlaying) sfxRoll.Play();
         else if (rb.velocity.x < 1 && rb.velocity.x > -1 || !isGrounded) sfxRoll.Stop();
+
+        if (currentWarmth > 0)
+        {
+            anim.speed = currentWarmth * .25f;
+            anim.SetBool("Melting", true);
+        }
+        else
+        {
+            anim.speed = 1;
+            anim.SetBool("Melting", false);
+        }
+
+        if (MoveX >= 1 || MoveX <= -1) anim.SetBool("Rolling", PickUpList.Count == 0);
+        else anim.SetBool("Rolling", false);
 
         if (MoveX > 0) sr.flipX = false;
         else if (MoveX < 0) sr.flipX = true;
@@ -100,6 +120,7 @@ public class PlayerMovement : MonoBehaviour
                 Destroy(collision.gameObject); //romove loose ball
                 PickUpList.Add(Instantiate(isBlue ? BluePickedUp : PickedUp, new Vector2(gameObject.transform.position.x, gameObject.transform.position.y - gameObject.transform.localScale.y * (PickUpList.Count + 1)), Quaternion.identity, gameObject.transform)); //instantiate snowball beneath player
                 scarf.SetActive(true);
+                hat.SetActive(true);
 
                 // Fix collider and move player up                                                                                                                                                                                                                         // PickUpList[PickUpList.Count-1].tag = "PickedUp"; //add tag (just to be sure)
                 gameObject.transform.position = new Vector2(gameObject.transform.position.x, gameObject.transform.position.y + gameObject.transform.localScale.y); //moves player up
@@ -126,7 +147,7 @@ public class PlayerMovement : MonoBehaviour
             // moves groundcheck back up
             groundCheck.transform.position = new Vector2(groundCheck.transform.position.x, groundCheck.transform.position.y + gameObject.transform.localScale.y);
 
-            if (PickUpList.Count == 0) scarf.SetActive(false); //if no balls left, hide scarf
+            if (PickUpList.Count == 0) { scarf.SetActive(false); hat.SetActive(false); } //if no balls left, hide scarf and hat
             if (isBlue) return true; // Blue balls don't drop back as a pickup
 
             Vector2 NewPickUpPos = new Vector2(gameObject.transform.position.x, gameObject.transform.position.y - gameObject.transform.localScale.y * (PickUpList.Count + 1) - 0.1f);
