@@ -32,6 +32,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] GroundCheck roofCheck;
     private Rigidbody2D rb;
     private SpriteRenderer sr;
+    private SpriteRenderer srScarf;
     private CapsuleCollider2D cc;
     private Animator anim;
 
@@ -39,6 +40,7 @@ public class PlayerMovement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
+        srScarf = scarf.GetComponent<SpriteRenderer>();
         cc = GetComponent<CapsuleCollider2D>();
         anim = GetComponent<Animator>();
     }
@@ -73,8 +75,8 @@ public class PlayerMovement : MonoBehaviour
         if (MoveX >= 1 || MoveX <= -1) anim.SetBool("Rolling", PickUpList.Count == 0);
         else anim.SetBool("Rolling", false);
 
-        if (MoveX > 0) sr.flipX = false;
-        else if (MoveX < 0) sr.flipX = true;
+        if (MoveX > 0) { sr.flipX = false; srScarf.flipX = false; }
+        else if (MoveX < 0) { sr.flipX = true; srScarf.flipX = true; }
 
         // Grounded jump holding
         if (Input.GetButton("Jump") && isGrounded && !OnJumpCooldown)
