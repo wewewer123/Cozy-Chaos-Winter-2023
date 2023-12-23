@@ -7,13 +7,16 @@ public class PlayerMovement : MonoBehaviour
     private float MoveX;
     private float MoveY;
     private bool isGrounded;
+    private bool heldJumping;
     public float targetWarmth = 0;
-    private float currentWarmth = 0;
+    public float currentWarmth = 0;
 
     [Header("Movement")]
     [SerializeField] private float jumpForce = 5f;
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float accelSlowdown = 3.5f;
+    [SerializeField] private float groundCheckOffset = 0.5f;
+    [SerializeField] private Vector3 groundCheckSize = new Vector3(0.5f, 0.35f, 1);
     public List<GameObject> PickUpList; // Used for ball count
     [Header("References")]
     [SerializeReference] private GameObject PickUp;
@@ -48,12 +51,6 @@ public class PlayerMovement : MonoBehaviour
         anim = GetComponent<Animator>();
     }
 
-    // --- Useful functions to avoid repetition ---
-    void Jump()
-    {
-        PlaySFX(sfxJump);
-        rb.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
-    }
     /// <summary>
     /// Play SFX with a slight pitch offset
     /// </summary>
@@ -72,6 +69,19 @@ public class PlayerMovement : MonoBehaviour
     {
         scarf.SetActive(active);
         hat.SetActive(active);
+    }
+
+    private IEnumerator JumpCooldown()
+    {
+        heldJumping = true;
+        yield return new WaitForSeconds(0.2f);
+        heldJumping = false;
+    }
+
+    void Jump()
+    {
+        PlaySFX(sfxJump);
+        rb.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
     }
 
     public void RemoveBall(bool cooldown)
@@ -104,7 +114,6 @@ public class PlayerMovement : MonoBehaviour
         CameraLookAt.transform.position = new Vector2(CameraLookAt.transform.position.x, CameraLookAt.transform.position.y + gameObject.transform.localScale.y / 2);//moves camera look at
     }
 
-    // --- Game loop ---
     private void Update()
     {
         // Smoothly lerps the target warmth to the current warmth
@@ -141,8 +150,9 @@ public class PlayerMovement : MonoBehaviour
         }
 
         // Grounded jump holding
-        if (Input.GetButton("Jump") && isGrounded && rb.velocity.y < 0.5f)
+        if (Input.GetButton("Jump") && isGrounded && !heldJumping)
         {
+            StartCoroutine(JumpCooldown());
             Jump();
         }
 
@@ -157,7 +167,7 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate()
     {
         // Check for collisions
-        groundCheck = null != Physics2D.OverlapBox(transform.position + Vector3.down * (PickUpList.Count + 0.25f), new Vector3(0.9f, 0.5f, 1), 0, groundLayer);
+        groundCheck = null != Physics2D.OverlapBox(transform.position + Vector3.down * (PickUpList.Count + groundCheckOffset), groundCheckSize, 0, groundLayer);
         roofCheck = null != Physics2D.OverlapBox(transform.position + Vector3.up, Vector3.one, 0, groundLayer);
 
         if (!isGrounded && groundCheck) // If we just landed on the ground, play the landing sound and spawn particles
@@ -204,7 +214,7 @@ public class PlayerMovement : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.green;
-        Gizmos.DrawWireCube(transform.position + Vector3.down * (PickUpList.Count + 0.25f), new Vector3(0.9f, 0.5f, 1));
+        Gizmos.DrawWireCube(transform.position + Vector3.down * (PickUpList.Count + groundCheckOffset), groundCheckSize);
         Gizmos.DrawWireCube(transform.position + Vector3.up, Vector3.one);
     }
 }

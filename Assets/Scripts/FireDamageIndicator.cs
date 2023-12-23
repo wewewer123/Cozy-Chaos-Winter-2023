@@ -1,9 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using DG.Tweening;
-using Unity.VisualScripting;
 using UnityEngine;
 
+[RequireComponent(typeof(PlayerMovement))]
 public class FireDamageIndicator : MonoBehaviour
 {
     // [SerializeField] private GameObject effect;
@@ -20,6 +18,7 @@ public class FireDamageIndicator : MonoBehaviour
     private Material _effectMaterial;
     private static int voronoiPowerCached = Shader.PropertyToID("_VoronoiPower");
     private static int intensityCached = Shader.PropertyToID("_Intensity");
+    private PlayerMovement player;
 
     private void Awake()
     {
@@ -35,11 +34,28 @@ public class FireDamageIndicator : MonoBehaviour
             Debug.LogError("FireDamageIndicator: effect material not found! Please readd it from another level scene.");
             Destroy(gameObject); // Destroying the whole object to make sure whatever dummy is making this level is aware of the issue
         }
+
+        float cameraHeight = Camera.main.orthographicSize * 2;
+        float cameraWidth = cameraHeight * Camera.main.aspect;
+
+        effect.transform.localScale = new Vector3(cameraWidth, cameraHeight, 1);
+
+        player = GetComponent<PlayerMovement>();
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    private void ResetEffect()
     {
-        if (other.CompareTag("Player"))
+        _effectMaterial.DOKill();
+        effect.SetActive(false);
+        _effectMaterial.DOFloat(intensityMaxValue, intensityCached, effectTransationTime);
+        _effectMaterial.DOFloat(voronoiPowerMaxValue, voronoiPowerCached, effectTransationTime);
+    }
+
+    private void Update()
+    {
+        if (player.currentWarmth <= 0) { ResetEffect(); return; }
+
+        if (player.currentWarmth > 0)
         {
             _effectMaterial.DOKill();
             _effectMaterial.SetFloat(intensityCached, intensityMaxValue);
@@ -50,14 +66,19 @@ public class FireDamageIndicator : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Fireplace"))
+        {
+            player.targetWarmth += 2.5f;
+        }
+    }
+
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Fireplace"))
         {
-            _effectMaterial.DOKill();
-            effect.SetActive(false);
-            _effectMaterial.DOFloat(intensityMaxValue, intensityCached, effectTransationTime);
-            _effectMaterial.DOFloat(voronoiPowerMaxValue, voronoiPowerCached, effectTransationTime);
+            player.targetWarmth -= 2.5f;
         }
     }
 }
