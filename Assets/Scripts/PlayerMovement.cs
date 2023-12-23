@@ -70,9 +70,10 @@ public class PlayerMovement : MonoBehaviour
     /// </summary>
     void SetDress(bool active)
     {
-        scarf.SetActive(true);
-        hat.SetActive(true);
+        scarf.SetActive(active);
+        hat.SetActive(active);
     }
+
     public void RemoveBall(bool cooldown)
     {
         if (PickUpList.Count == 0)
@@ -88,10 +89,7 @@ public class PlayerMovement : MonoBehaviour
 
         //if no balls left, hide scarf and hat
         if (PickUpList.Count == 0)
-        {
-            scarf.SetActive(false);
-            hat.SetActive(false);
-        }
+            SetDress(false);
 
         // Blue balls don't drop back as a pickup
         if (isBlue)
@@ -110,17 +108,15 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         // Smoothly lerps the target warmth to the current warmth
-        currentWarmth = Mathf.Lerp(targetWarmth, currentWarmth, .1f); 
-        
+        currentWarmth = Mathf.Lerp(targetWarmth, currentWarmth, .1f);
+
         // Gets momentum and moves it
         MoveX = Input.GetAxis("Horizontal") * moveSpeed;
         MoveY = Input.GetAxis("Vertical");
 
         // Play rolling sfx
-        if(isGrounded && !sfxRoll.isPlaying && Mathf.Abs(rb.velocity.x) > 1)
-            sfxRoll.Play();
-        else
-            sfxRoll.Stop();
+        if(isGrounded && Mathf.Abs(rb.velocity.x) > 1) PlaySFX(sfxRoll);
+        else sfxRoll.Stop();
 
         // Melting animations
         if (currentWarmth > 0)
@@ -151,7 +147,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         // Jumping while in the air with balls
-        if (Input.GetButtonDown("Jump") && !isGrounded && PickUpList.Count > 0) 
+        if (Input.GetButtonDown("Jump") && !isGrounded && PickUpList.Count > 0)
         {
             RemoveBall(false);
             Jump();
@@ -189,7 +185,7 @@ public class PlayerMovement : MonoBehaviour
                 // Remove ball
                 Destroy(collision.gameObject); //romove loose ball
                 PickUpList.Add(Instantiate(isBlue ? BluePickedUp : PickedUp, new Vector2(gameObject.transform.position.x, gameObject.transform.position.y - gameObject.transform.localScale.y * (PickUpList.Count + 1)), Quaternion.identity, gameObject.transform)); //instantiate snowball beneath player
-                
+
                 // Update appearance
                 SetDress(true);
 
