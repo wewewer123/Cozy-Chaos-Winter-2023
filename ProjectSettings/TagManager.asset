@@ -9,6 +9,7 @@ TagManager:
   - PickedUp
   - BluePickUp
   - BluePickedUp
+  - Fireplace
   layers:
   - Default
   - TransparentFX

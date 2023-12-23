@@ -12,8 +12,6 @@ public class Burn : MonoBehaviour
     }
     private IEnumerator BurnTimer()
     {
-        playerMovement.targetWarmth += 1;
-
         // While player has balls burn them
         while (playerMovement.PickUpList.Count > 0)
         {
@@ -40,10 +38,6 @@ public class Burn : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collider)
     {
-        if (collider.gameObject.CompareTag("Player"))
-        {
-            playerMovement.targetWarmth -= 1;
-            StopAllCoroutines();
-        }
+        if (collider.gameObject.CompareTag("Player")) StopAllCoroutines();
     }
 }

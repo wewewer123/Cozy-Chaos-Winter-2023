@@ -354,6 +354,7 @@ GameObject:
   - component: {fileID: 8770991120977192116}
   - component: {fileID: 2453636627445807572}
   - component: {fileID: 7348457451365017421}
+  - component: {fileID: 7301537361098668331}
   m_Layer: 2
   m_Name: Player
   m_TagString: Player
@@ -449,6 +450,8 @@ MonoBehaviour:
   jumpForce: 5
   moveSpeed: 6.5
   accelSlowdown: 0.75
+  groundCheckOffset: 0.5
+  groundCheckSize: {x: 0.5, y: 0.35, z: 1}
   PickUpList: []
   PickUp: {fileID: 2473912822316316176, guid: d38b025965a7f3b49ac6a7aefeeb8fbf, type: 3}
   BluePickUp: {fileID: 2473912822316316176, guid: db566e4ad2347ff49836db3bf894cfc4, type: 3}
@@ -463,6 +466,7 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
+  groundCheck: 0
 --- !u!50 &8770991120977192116
 Rigidbody2D:
   serializedVersion: 4
@@ -521,6 +525,23 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &7301537361098668331
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8770991120977192115}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19cefacf3e9e2174dbd05be1e2c27d5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  effectTransationTime: 0.25
+  intensityMinValue: 0.5
+  intensityMaxValue: 1
+  voronoiPowerMinValue: 0.8
+  voronoiPowerMaxValue: 1.8
 --- !u!1 &8770991122337908530
 GameObject:
   m_ObjectHideFlags: 0
