@@ -9,7 +9,7 @@ public class PickUp : MonoBehaviour
     public void Spawned(bool CoolDown, float XForce)
     {
         cooldownDone = false;
-        gameObject.GetComponent<Rigidbody2D>().AddForce(new Vector2(XForce * 5, Random.Range(-250, 0)));
+        gameObject.GetComponent<Rigidbody2D>().AddForce(new Vector2(XForce * 5, 0));
         if (CoolDown)
         {
             StartCoroutine(waitTime());
