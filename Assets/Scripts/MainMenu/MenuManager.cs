@@ -11,6 +11,7 @@ public class MenuManager : MonoBehaviour
     // Event called when setting menu
     public event System.Action<string> onSetMenu;
     [SerializeField] Menu startingMenu;
+    [SerializeField] GameObject exitButton;
 
     // Singleton setup
     void Awake()
@@ -26,6 +27,9 @@ public class MenuManager : MonoBehaviour
     {
         yield return new WaitForEndOfFrame();
         SetMenu(startingMenu.gameObject.name);
+        #if UNITY_WEBGL
+            exitButton.SetActive(false);
+        #endif
     }
 
     /// <summary>
